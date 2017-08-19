@@ -61,44 +61,44 @@ var bot = new builder.UniversalBot(connector,{
 //     }, 3000);
 // });
 
-bot.use({
-    botbuilder: function (session, next) {
-        // var delta = new Date().getTime();
-        // session.send(JSON.stringify(delta)); 
-        // session.send("Test Use");
-        // session.send(app);
-        session.send("%s", JSON.stringify(session));
-        // session.send("%s",session);
+// bot.use({
+//     botbuilder: function (session, next) {
+//         // var delta = new Date().getTime();
+//         // session.send(JSON.stringify(delta)); 
+//         // session.send("Test Use");
+//         // session.send(app);
+//         session.send("%s", JSON.stringify(session));
+//         // session.send("%s",session);
 
-        // app.get('/', function(req, res){
-        //     // console.log(req.query.name);
-        //     session.send('Response send to client:: '+req.query.name);
-        // });
-        //session.send("%s", JSON.stringify(session));
-        // session.send("%s", JSON.stringify(next));
-        // session.send('Set time out 1');
-        // if (session.conversationData.previousAccess) {
-        //     session.send('Set time out 2');
-        //     // var delta = new Date().getTime() - session.conversationData.previousAccess;
-        //     // session.send(new Date().getTime() - session.conversationData.previousAccess);
-        //         if (new Date().getTime() - session.conversationData.previousAccess > 30000) {
-        //         session.send('Set time out 4');
-        //         session.clearDialogStack();
-        //     }
-        //  }
-        //  session.send('Set time out 3');
-        //  session.conversationData.previousAccess = session.sessionState.lastAccess;
-        // //  session.send(session.privateConversationData.previousAccess);
-        // //  session.send(session.sessionState.lastAccess);
-         next();
-    }
-});
+//         // app.get('/', function(req, res){
+//         //     // console.log(req.query.name);
+//         //     session.send('Response send to client:: '+req.query.name);
+//         // });
+//         //session.send("%s", JSON.stringify(session));
+//         // session.send("%s", JSON.stringify(next));
+//         // session.send('Set time out 1');
+//         // if (session.conversationData.previousAccess) {
+//         //     session.send('Set time out 2');
+//         //     // var delta = new Date().getTime() - session.conversationData.previousAccess;
+//         //     // session.send(new Date().getTime() - session.conversationData.previousAccess);
+//         //         if (new Date().getTime() - session.conversationData.previousAccess > 30000) {
+//         //         session.send('Set time out 4');
+//         //         session.clearDialogStack();
+//         //     }
+//         //  }
+//         //  session.send('Set time out 3');
+//         //  session.conversationData.previousAccess = session.sessionState.lastAccess;
+//         // //  session.send(session.privateConversationData.previousAccess);
+//         // //  session.send(session.sessionState.lastAccess);
+//          next();
+//     }
+// });
 
 //Recognizers
 /**
  *session.conversationData.name
  session.conversationData.Email
- session.conversationData.IsResident
+ session.conversationData.isRegistered
 
  */
 var QnaRecognizer = new cognitiveservices.QnAMakerRecognizer({
@@ -130,13 +130,6 @@ var intents = new builder.IntentDialog({ recognizers: [
     var isSupport = true;
     if(isSupport){
         session.send("Your first intent saids: %s", JSON.stringify(args));
-        // if(!session.conversationData.applicationSubmitted)
-        // {
-        //     session.replaceDialog("wantToInvest");
-        // }
-        // else{
-        //     session.replaceDialog("askagain");
-        // }
     }
     else{
         session.send("cannotUnderstand");;
@@ -154,30 +147,9 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 .matches('qna',[
     function (session, args, next) {
-        // session.send('Q and A');
-        /*bot.use(builder.Middleware.sendTyping());
-        setTimeout(function () {
-            session.send("Hello there...");
-        }, 3000);*/
         var answerEntity = builder.EntityRecognizer.findEntity(args.entities, 'answer');
         session.send(answerEntity.entity);
         session.endDialog();
-        
-        // var AnyOtherThingList = program.Helpers.GetOptions(program.Options.AnyOtherThing,session.preferredLocale());
-        // builder.Prompts.choice(session, "getServices", AnyOtherThingList,{listStyle: builder.ListStyle.button});
-            
-        /*if(session.conversationData.occurance != null){
-            session.conversationData.occurance++;
-        }
-        else{
-            session.conversationData.occurance=0;
-        }
-        if(session.conversationData.occurance >= program.Constants.questionsBeforeInvest && !session.conversationData.applicationSubmitted){
-            session.replaceDialog("wantToInvest");
-        }else{
-            session.endDialog();
-        }*/
-        
     },
     function(session,results){
         if(results.response.index == 0)
@@ -196,11 +168,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.preferredLocale(locale,function(err){
         if(!err){
             session.send("welcomeText");
-
-            session.send(JSON.stringify(session));
-            
-
-            session.replaceDialog("userTypeSelection");
+            session.replaceDialog("ExistingUser");
         };
     })
 })
@@ -211,7 +179,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.preferredLocale(locale,function(err){
         if(!err){
             session.send("welcomeText");
-            session.replaceDialog("userTypeSelection");
+            session.replaceDialog("ExistingUser");
         };
     })
 })
@@ -341,24 +309,48 @@ var program = {
         },
         Services:{
             en:{
-                "Inquiry":{Description:"Inquiry"},
-                "Complaint":{Description:"Complaint"},
-                "Cleaning Issue":{Description:"Cleaning Issue"},
-                "Security":{Description:"Security"},
-                "Facility Management":{Description:"Facility Management"},
-                "Promotion":{Description:"Promotion"},
-                "Adding Related Customer":{Description:"Adding Related Customer"},
-                "Retail Store Details":{Description:"Retail Store Details"},
+                "Personal Banking":{Description:"Personal Banking"},
+                "Business Banking":{Description:"Business Banking"},
+                "Private Banking":{Description:"Private Banking"},
+                "Submit Inquiries":{Description:"Submit Inquiries"},
             },
             ar:{
-                "Inquiry":{Description:"Inquiry"},
-                "Complaint":{Description:"Complaint"},
-                "Cleaning Issue":{Description:"Cleaning Issue"},
-                "Security":{Description:"Security"},
-                "Facility Management":{Description:"Facility Management"},
-                "Promotion":{Description:"Promotion"},
-                "Adding Related Customer":{Description:"Adding Related Customer"},
-                "Retail Store Details":{Description:"Retail Store Details"},
+                "حساب شخصي":{Description:"حساب شخصي"},
+                "حساب شركه":{Description:"حساب شركه"},
+                "حساب خاص":{Description:"حساب خاص"},
+                "تقديم طلب":{Description:"تقديم طلب"},
+            }
+        },
+        CreditCardServices:{
+            en:{
+                "View all available Credit Card Offers":{Description:"View all available Credit Card Offers"},
+                "Ask about Frequent Flier Miles offer":{Description:"Ask about Frequent Flier Miles offer"},
+            },
+            ar:{
+                "عرض بطاقات الإئتمان المتاحه":{Description:"عرض بطاقات الإئتمان المتاحه"},
+                "عروض الماتحه":{Description:"عروض الماتحه"},
+            }
+        },
+        LoanOffersServices:{
+            en:{
+                "View all available Loan Offers":{Description:"View all available Credit Card Offers"},
+                "Ask us any question":{Description:"Ask us any question"},
+            },
+            ar:{
+                "عروض القروض المتاحه":{Description:"عروض القروض المتاحه"},
+                "إسالنا...":{Description:"إسالنا..."},
+            }
+        },
+       PersonalBankingServices :{
+            en:{
+                "Our Credit Cards":{Description:"Our Credit Cards"},
+                "Our Accounts":{Description:"Our Accounts"},
+                "Our Loan Offers":{Description:"Our Loan Offers"},
+            },
+            ar:{
+                "بطاقات الإئتمان":{Description:"بطاقات الإئتمان"},
+                "حساباتنا":{Description:"حساباتنا"},
+                "عروض القروض":{Description:"عروض القروض"},
             }
         },
         Operations: {
@@ -419,45 +411,60 @@ var program = {
                         }
                     }    
                 },
-                "Available Properties":{
+                "Available Credit Cards":{
                     Cards : true,
-                    Title:"Available Properties", 
+                    Title:"Available Credit Cards", 
                     Description:"please select one of the below",
                     Items:{
-                        "Viva Bahryia Tower 29": {
+                        "Platinum Card": {
                             Cards : true,
                             Image: "http://www.udcqatar.com/ContentFiles/74Image.jpg",
-                            Title:"Viva Bahryia Tower 29",
-                            Description:"Start Date: December 2007 Delivery Date: February 2010 Project Type: Residential ​​​​",
-                            Pref: "Viva Bahriya precinct is of true beachfront condominium living, perfect for families and all who seek a more relaxed lifestyle. Architecturally themed to echo the very best of the Maghreb – with Moroccan-styled townhouses and apartments, Viva Bahriya is lapped by a warm, inviting sea and its own stretch of pristine beach, it is a haven for water sports enthusiasts. Offering tenants a vast range of options for a “greener” lifestyle, Viva Bahriya is strategically located within a lush and reserved neighborhood of the Pearl-Qatar.Various studios and 1 to 3 bedroom apartments and luxury penthouses are located in elegant tower residences. Townhouses and low rise blocks offer innovative design and features with Marina and beach views."
+                            Title:"Platinum Card",
+                            Description:"UBER RIDES WITH PLATINUM THE GLOBAL LOUNGE COLLECTION...",
+                            Pref: "UBER RIDES WITH PLATINUM THE GLOBAL LOUNGE COLLECTION $200 AIRLINE FEE CREDIT FEE CREDIT FOR GLOBAL ENTRY OR TSA PRE FINE HOTELS & RESORTS THE HOTEL COLLECTION PLATINUM TRAVEL SERVICE STARWOOD PREFERRED GUEST® GOLD HILTON HONORS™ GOLD STATUS NO FOREIGN TRANSACTION FEES CAR RENTAL PRIVILEGES"
                         },  
-                        "Qanat Quartier": {
+                        "Gold Card": {
                             Cards : true,
                             Image: "http://www.udcqatar.com/ContentFiles/73Image.jpg",
-                            Title:"Qanat Quartier",
-                            Description:"Start Date: March 2006 Delivery Date: June 2012 Project Type: Retail,Residential ​​​​",
-                            Pref: "With its colorful Venetian character, Qanat Quartier is carefully planned around intricate canals and pedestrian-friendly squares and plazas. Each waterway is spanned by stylish bridges which further evoke the soul of Italian romantic living. Edged by sandy bays embracing the Arabian Gulf, Qanat Quartier is an intriguingly complex area in which a true Riviera lifestyle can be enjoyed. Proximity to water is a feature of all townhouses, with many enjoying direct views over the beach and some even featuring roof gardens.Boutique-style shopping adds to the intimate village feel and provides a heart for the community that thrives there. With a significant percentage of retail space signed, the district is anticipated to be extremely popular with its residents as well as visitors as it evolves into a unique retail locale."
+                            Title:"Gold Card",
+                            Description:"Premier Rewards Gold Card from American Express Reward yourself for the things you already do.....",
+                            Pref: "Premier Rewards Gold Card from American Express Reward yourself for the things you already do. Special Offer For You: Earn 50,000 Points after you spend $2,000 on purchases on your new Card in your first 3 months. This offer is available to you by clicking through this web page. If you leave or close this web page and return later, this offer may no longer be available. ANNUAL FEE $0 intro annual fee for the first year, then $195†¤ NO INTEREST CHARGES No interest charges because you pay your balance in full each month"
                         },  
-                        "The Pearl Towers": {
+                        "Diner’s Club": {
                             Cards : true,
                             Image: "http://www.udcqatar.com/ContentFiles/75Image.jpg",
-                            Title:"The Pearl Towers",
-                            Description:"Start Date: February 2013 Delivery Date: October 2016 Project Type: Commercial​​​​",
-                            Pref: "Standing as the tallest architecture on the Pearl Island, the Pearl AQ-01 and AQ-02 towers are identical structures situated at the entrance of The Pearl-Qatar and developed primarily to accommodate high quality commercial office space, making it the location of choice for many discerning businesses. Within its cosmopolitan setting, The Pearl Towers' design language is fundamentally a modern-day interpretation of time-honored styles and themes, and each 42-storey tower offers amenities designed to provide the best possible working environment within first class facilities.As a high quality state-of-the-art commercial office development, the Pearl Towers are seen as a major step forward for the Island and a great enterprise aimed at clients looking for office space in an inspiring location. Standing at approximately 201 meters each on opposite sides, the two beacon-like office towers flank the main access road of the Pearl-Qatar, and serve as a defining feature to the whole Pearl development."
+                            Title:"Diner’s Club",
+                            Description:"World-class merchandise: Select from hundreds of brand-name merchandise options, from electroni....​​​​",
+                            Pref: "• World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors. • Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments. • Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals. • Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises. • Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more • Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more • Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true"
+                        }
+                    }   
+                }
+            },
+            "Available Loan Options":{
+                    Cards : true,
+                    Title:"Available Loan Options", 
+                    Description:"please select one of the below",
+                    Items:{
+                        "Personal Loan": {
+                            Cards : true,
+                            Image: "http://www.udcqatar.com/ContentFiles/74Image.jpg",
+                            Title:"Platinum Card",
+                            Description:"No matter what your aspirations and needs, our financing packages and offering...",
+                            Pref: "No matter what your aspirations and needs, our financing packages and offerings will help you and provide you with the necessary support to get there. With our products and offerings package, you are now closer to many things you desired, such as going on your dream vacation, providing the best educational opportunities for your children, celebrating special occasions as planned or receiving the most advanced and up-to-date medical treatment, in addition to pampering yourself with the most plush and prestigious products. Types of Personal Loans: Personal Loan against Salary Personal Loan against Fixed Deposit: You can get the cash you need while maintaining your fixed deposit and accruing profits. With a personal loan against your fixed term deposit, you get cash up to 90% of your fixed deposit value at the lowest interest rates upon application using only your ID. IPO Loans: Whether you are an experienced stock market investor, or just getting started, an IPO finance loan can help you grab the best opportunities."
                         },  
-                        "Porto Arabia Retail and Owned Towers": {
-                            Cards : true, 
-                            Image: "http://www.udcqatar.com/ContentFiles/70Image.jpg",
-                            Title:"Porto Arabia Retail and Owned Towers",
-                            Description:"Start Date: March 2006 Delivery Date: August 2010 Project Type: Retail,Residential​​​​",
-                            Pref: "Porto Arabia represents a modern Mediterranean dwelling in the heart of Arabia with an open air retail design. Catering to fashion as well as food & beverage, the colorful waterfront of Porto Arabia – known as La Croisette, is a lively 2.5 kilometer pedestrianized concourse lined with numerous globally recognized upscale retail stores and dining outlets. As the thriving cosmopolitan heart of the Pearl-Qatar, Porto Arabia captures the sophisticated essence of the Riviera, combining elegant towers and townhouses in a spectacular location.Conducive to the highest standards of living, various studios, 1 to 4 bedroom apartments and townhouses are offered with unit sizes ranging from 88 sqm. to 900 sqm. Porto Arabia is reminiscent of a continental harbor, yet positively alive with Arabian warmth and charm."
-                        },   
-                        "Medina Centrale Start": {
-                            Cards : true, 
-                            Image: "http://www.udcqatar.com/ContentFiles/69Image.jpg",
-                            Title:"Medina Centrale Start",
-                            Description:"Date: July 2007 Delivery Date: July 2013 Project Type: Retail,Residential​​​​",
-                            Pref: "Nestled between the residential, shopping and dining district of Porto Arabia and the relaxed, family-oriented beachfront community of Viva Bahriya, Medina Centrale has been conceived from the outset as the heart of The Pearl-Qatar. The entire Medina Centrale district forms a single, mixed-use property development comprising residential apartments, ample retail space and leisure experiences. With a charming ambience likened to that of the Mediterranean, Medina Centrale offers retail facilities in open-air promenades as well as indoor shopping facilities, parks, plazas, water features and centralized gathering place in the district’s Central Piazza, well suited to host public activities and community events.The demand to lease residential property in Medina Centrale is driven by the appeal of living in a central community characterized by low-rise buildings, abundant green space and the interesting variety of retail shops and services right at their doorstep.s"
+                        "Home Loan": {
+                            Cards : true,
+                            Image: "http://www.udcqatar.com/ContentFiles/73Image.jpg",
+                            Title:"Home Loan",
+                            Description:"We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: • Low interest rates.....",
+                            Pref: "We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: • Low interest rates (1) • No management fees • Flexible monthly repayments • Financing ready properties, under construction and Land (2) • Programs for salaried & self-employed customers • Dedicated mortgage loan center for all mortgage financing services * All loans subject to bank approval. The bank reserves the right to request additional documents and to impose additional conditions in order to complete the approval process."
+                        },  
+                        "Diner’s Club": {
+                            Cards : true,
+                            Image: "http://www.udcqatar.com/ContentFiles/75Image.jpg",
+                            Title:"Diner’s Club",
+                            Description:"World-class merchandise: Select from hundreds of brand-name merchandise options, from electroni....​​​​",
+                            Pref: "• World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors. • Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments. • Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals. • Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises. • Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more • Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more • Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true"
                         }
                     }   
                 }
@@ -607,38 +614,28 @@ var program = {
                 }
             }
         ]);
-        bot.dialog("userTypeSelection",[
+        bot.dialog("ExistingUser",[
             function(session,results){
-                 var UserTypes = program.Helpers.GetOptions(program.Options.UserType,session.preferredLocale());
-                 builder.Prompts.choice(session, "getUserType", UserTypes,{listStyle: builder.ListStyle.button});
+                  var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.preferredLocale());
+                  builder.Prompts.choice(session, "areYouMemeber", AlreadyUserOptions,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
-               session.conversationData.userType = results.response.entity;
+            //    session.conversationData.userType = results.response.entity;
                 if(results.response.index == 1)
                 {
-                    // session.send("%s",session.conversationData.IsResident);
-                    if (session.conversationData.IsResident) {
-                        session.replaceDialog("Services");
-                        // session.send("whichService");
-                        // session.endDialog();
-                    }
-                    else
-                    {
-                        var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.preferredLocale());
-                        builder.Prompts.choice(session, "areYouMemeber", AlreadyUserOptions,{listStyle: builder.ListStyle.button});
-                    }
+                    session.replaceDialog("Services");
                 }
                 else
                 {
-                    session.replaceDialog("PropertyOptions"); 
+                    session.replaceDialog("Services"); 
                 }
             },
                function (session,results) {
                    if (results.response.index == 0) {
-                    session.beginDialog("getEmailCRM",{ reprompt: false, IsResident : true });
+                    session.beginDialog("getEmailCRM",{ reprompt: false, isRegistered : true });
                    }
                    else
-                    session.beginDialog("getEmailCRM",{ reprompt: false, IsResident : false });
+                    session.beginDialog("getEmailCRM",{ reprompt: false, isRegistered : false });
             },
             function (session,results) {
                 // session.send(JSON.stringify(results));
@@ -803,9 +800,9 @@ var program = {
                 if (args && args.reprompt) {
                         builder.Prompts.text(session, "validEmail");
                 } else {
-                    if (args.IsResident)
+                    if (args.isRegistered)
                         builder.Prompts.text(session, "enterEmailCRM");
-                    else if(!args.IsResident)
+                    else if(!args.isRegistered)
                         builder.Prompts.text(session, "enterEmailNoCRM");
                     else
                         builder.Prompts.text(session, "enterEmail");
@@ -826,7 +823,7 @@ var program = {
                                     var element = records[i];
                                     if (element.emailaddress1 != null && element.emailaddress1.toLowerCase() == results.response.toLowerCase()) {
                                         session.CRMResult = true;
-                                        session.conversationData.IsResident = true;
+                                        session.conversationData.isRegistered = true;
                                         session.conversationData.firstName = element.firstname;
                                         break;
                                     }
@@ -979,10 +976,47 @@ var program = {
             },
             function(session,results){
                 if (results.response.index == 0) {
-                    session.send("whichService");
-                    session.endDialog();
+                    // session.send("whichService");
+                    session.replaceDialog("PersonalBanking");
                 }
-                else
+                else if(results.response.index == 1)
+                {
+                    session.send("This section still under development");
+                    session.replaceDialog("Services");
+                }
+                else if(results.response.index == 2)
+                {
+                    session.send("This section still under development");
+                    session.replaceDialog("Services");
+                }
+                else if(results.response.index == 3)
+                {
+                    session.send("This section still under development");
+                    session.replaceDialog("Services");
+                }
+            }
+        ]);
+
+        bot.dialog("PersonalBanking",[
+            function(session){
+                var personalBankingServicesList = program.Helpers.GetOptions(program.Options.PersonalBankingServices,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", personalBankingServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards dialog
+                   session.replaceDialog("CreditCard");
+                }
+                else if(results.response.index == 1)
+                {
+                   session.replaceDialog("LoanOffers");
+                }
+                else if(results.response.index == 2)
+                {
+                    session.send("This section still under development");
+                    session.replaceDialog("Services");
+                }
+                else if(results.response.index == 3)
                 {
                     session.send("This section still under development");
                     session.replaceDialog("Services");
@@ -990,12 +1024,52 @@ var program = {
             }
         ]);
         
-        //////////////////////////
-
-    bot.dialog("PropertyOptions",[
+        bot.dialog("CreditCard",[
             function(session){
+                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServices,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "CreditCardOptions" , NoOption:"CreditCard" , YesOption:"CollectInformation" });
+                }
+                else if(results.response.index == 1)
+                {
+                    session.send("whichService");
+                    session.endDialog();
+                }
+            }
+        ]);
+
+        bot.dialog("LoanOffers",[
+            function(session){
+                var LoanOffersServicesList = program.Helpers.GetOptions(program.Options.LoanOffersServices,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", LoanOffersServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "CreditCardOptions" , NoOption:"CreditCard" , YesOption:"CollectInformation" });
+                }
+                else if(results.response.index == 1)
+                {
+                    session.send("whichService");
+                    session.endDialog();
+                }
+            }
+        ]);
+
+        //////////////////////////
+            bot.dialog("HeroCardsDialog",[
+            function(session, args){
+                session.dialogData.ShowAll = args.ShowAll;
+                session.dialogData.YesOption = args.YesOption;
+                session.dialogData.NoOption = args.NoOption;
+                session.dialogData.DisplayOptions = args.DisplayOptions;
+
                 var locale = session.preferredLocale();
-                var result = program.Options.AvailableProperty[locale]["Available Properties"];
+                var result = program.Options.AvailableProperty[locale][args.DisplayOptions];
                 session.dialogData.item = result;
                 if(!result.Cards)
                 {
@@ -1054,15 +1128,13 @@ var program = {
             },
              function(session,results){
                 if(results.response.index == 0)
-                    session.replaceDialog("CollectInformation");//, { Property: results.response.entity }); 
+                    session.replaceDialog(session.dialogData.YesOption);
                 else if(results.response.index == 1)
                 {
-                    session.send("welcomeTextinmiddle");
-                    session.replaceDialog("userTypeSelection");
+                    session.replaceDialog(session.dialogData.NoOption);
                 }
                 else if(results.response.index == 2)
-                    session.replaceDialog("PropertyOptions"); 
-                //   session.send(JSON.stringify(results));
+                    session.replaceDialog(session.dialogData.ShowAll, { DisplayOptions : session.dialogData.DisplayOptions, ShowAll: session.dialogData.ShowAll , NoOption:session.dialogData.NoOption , YesOption:session.dialogData.YesOption}); 
              }
         ]);
 
@@ -1092,16 +1164,7 @@ var program = {
                session.preferredLocale(locale,function(err){
                    if(!err){
                         session.send("welcomeText");
-                        
-                        // var url = require('url');
-                        // session.send(JSON.stringify(url));
-                        
-                        // var url_parts = url.parse(request.url, true);
-                        // var query = url_parts.query;
-
-                        // var query = url_parts.query;
-                        /*var UserTypes = program.Helpers.GetOptions(program.Options.UserType,session.preferredLocale());
-                        builder.Prompts.choice(session, "getUserType", UserTypes,{listStyle: builder.ListStyle.button});*/
+                        session.replaceDialog("ExistingUser");
                    }
                }
             );  
@@ -1110,8 +1173,8 @@ var program = {
                 session.conversationData.userType = results.response.entity;
                 if(results.response.index == 1)
                 {
-                    // session.send("%s",session.conversationData.IsResident);
-                    if (session.conversationData.IsResident) {
+                    // session.send("%s",session.conversationData.isRegistered);
+                    if (session.conversationData.isRegistered) {
                         session.replaceDialog("Services");
                         // session.send("whichService");
                         // session.endDialog();
@@ -1131,10 +1194,10 @@ var program = {
             },
                function (session,results) {
                    if (results.response.index == 0) {
-                    session.beginDialog("getEmailCRM",{ reprompt: false, IsResident : true });
+                    session.beginDialog("getEmailCRM",{ reprompt: false, isRegistered : true });
                    }
                    else
-                    session.beginDialog("getEmailCRM",{ reprompt: false, IsResident : false });
+                    session.beginDialog("getEmailCRM",{ reprompt: false, isRegistered : false });
             },
             function (session,results) {
                 // session.send(JSON.stringify(results));
@@ -1210,10 +1273,3 @@ bot.on('conversationUpdate', function (activity) {
          });
     }
  });
-
-
-// // Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
-// var bot = new builder.UniversalBot(connector, function (session) {
-//     session.send("You saids: %s", session.message.text);
-
-// });
