@@ -1,0 +1,31 @@
+{
+  "name": "bankchatbot",
+  "version": "1.0.0",
+  "description": "for bank presentations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moatazattar/Bank-Chatbot.git"
+  },
+  "keywords": [
+    "bankchatbot"
+  ],
+  "author": "Moataz El-Attar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moatazattar/Bank-Chatbot/issues"
+  },
+  "homepage": "https://github.com/moatazattar/Bank-Chatbot#readme",
+  "dependencies": {
+    "adal-node": "^0.1.22",
+    "botbuilder": "^3.9.1",
+    "botbuilder-cognitiveservices": "^1.1.0",
+    "dynamics-web-api": "^1.2.9",
+    "nodemailer": "^4.0.1",
+    "q": "^1.5.0",
+    "restify": "^5.2.0"
+  }
+}
