@@ -67,6 +67,7 @@ bot.use({
         // session.send(JSON.stringify(delta)); 
         session.send("Test Use");
         // session.send(app);
+        session.send(JSON.stringify(session));
 
         app.get('/', function(req, res){
             // console.log(req.query.name);
