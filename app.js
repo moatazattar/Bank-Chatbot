@@ -66,7 +66,7 @@ bot.use({
         // var delta = new Date().getTime();
         // session.send(JSON.stringify(delta)); 
         session.send("Test Use");
-        session.send(app);
+        // session.send(app);
 
         app.get('/', function(req, res){
             // console.log(req.query.name);
