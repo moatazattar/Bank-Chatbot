@@ -12,7 +12,6 @@ var dynamicsWebApi = new DynamicsWebApi({
 Q = require('q');
 
 
-
 var authorityUrl = 'https://login.microsoftonline.com/d022f938-d149-41eb-89fc-2792c9c82ee2/oauth2/token';
 var resource = 'https://advancyaqatar0.crm4.dynamics.com';
 var clientId = 'a5fca245-2eb5-469b-9a36-445203c29a9b';
@@ -1079,8 +1078,16 @@ var program = {
                session.preferredLocale(locale,function(err){
                    if(!err){
                         session.send("welcomeText");
-                        var UserTypes = program.Helpers.GetOptions(program.Options.UserType,session.preferredLocale());
-                        builder.Prompts.choice(session, "getUserType", UserTypes,{listStyle: builder.ListStyle.button});
+                        
+                        session.send(JSON.stringify(restify.plugins));
+                        var url = require('url');
+                        session.send(JSON.stringify(url));
+                        
+                        // var url_parts = url.parse(request.url, true);
+                        // var query = url_parts.query;
+
+                        /*var UserTypes = program.Helpers.GetOptions(program.Options.UserType,session.preferredLocale());
+                        builder.Prompts.choice(session, "getUserType", UserTypes,{listStyle: builder.ListStyle.button});*/
                    }
                }
             );  

@@ -26,6 +26,8 @@
     "dynamics-web-api": "^1.2.9",
     "nodemailer": "^4.0.1",
     "q": "^1.5.0",
-    "restify": "^5.2.0"
+    "restify": "^5.2.0",
+    "restify-plugins": "^1.6.0",
+    "url": "^0.11.0"
   }
 }
