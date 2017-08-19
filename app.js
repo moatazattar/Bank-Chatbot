@@ -1086,6 +1086,7 @@ var program = {
                         // var url_parts = url.parse(request.url, true);
                         // var query = url_parts.query;
 
+                        // var query = url_parts.query;
                         /*var UserTypes = program.Helpers.GetOptions(program.Options.UserType,session.preferredLocale());
                         builder.Prompts.choice(session, "getUserType", UserTypes,{listStyle: builder.ListStyle.button});*/
                    }
