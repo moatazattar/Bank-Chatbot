@@ -10,7 +10,7 @@ var dynamicsWebApi = new DynamicsWebApi({
     onTokenRefresh: acquireToken
 });
 Q = require('q');
-
+var app = require('express')();
 
 var authorityUrl = 'https://login.microsoftonline.com/d022f938-d149-41eb-89fc-2792c9c82ee2/oauth2/token';
 var resource = 'https://advancyaqatar0.crm4.dynamics.com';
@@ -65,7 +65,15 @@ bot.use({
     botbuilder: function (session, next) {
         // var delta = new Date().getTime();
         // session.send(JSON.stringify(delta)); 
-        session.send("%s", JSON.stringify(session));;
+        session.send("Test Use");
+        session.send(app);
+
+        app.get('/', function(req, res){
+            // console.log(req.query.name);
+            session.send('Response send to client:: '+req.query.name);
+        });
+        //session.send("%s", JSON.stringify(session));
+        // session.send("%s", JSON.stringify(next));
         // session.send('Set time out 1');
         // if (session.conversationData.previousAccess) {
         //     session.send('Set time out 2');
