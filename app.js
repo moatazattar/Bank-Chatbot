@@ -418,21 +418,21 @@ var program = {
                     Items:{
                         "Platinum Card": {
                             Cards : true,
-                            Image: "http://www.udcqatar.com/ContentFiles/74Image.jpg",
+                            Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Card%20Platinum.jpg",
                             Title:"Platinum Card",
                             Description:"UBER RIDES WITH PLATINUM THE GLOBAL LOUNGE COLLECTION...",
                             Pref: "UBER RIDES WITH PLATINUM THE GLOBAL LOUNGE COLLECTION $200 AIRLINE FEE CREDIT FEE CREDIT FOR GLOBAL ENTRY OR TSA PRE FINE HOTELS & RESORTS THE HOTEL COLLECTION PLATINUM TRAVEL SERVICE STARWOOD PREFERRED GUEST® GOLD HILTON HONORS™ GOLD STATUS NO FOREIGN TRANSACTION FEES CAR RENTAL PRIVILEGES"
                         },  
                         "Gold Card": {
                             Cards : true,
-                            Image: "http://www.udcqatar.com/ContentFiles/73Image.jpg",
+                            Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Card%20Gold.jpg",
                             Title:"Gold Card",
                             Description:"Premier Rewards Gold Card from American Express Reward yourself for the things you already do.....",
                             Pref: "Premier Rewards Gold Card from American Express Reward yourself for the things you already do. Special Offer For You: Earn 50,000 Points after you spend $2,000 on purchases on your new Card in your first 3 months. This offer is available to you by clicking through this web page. If you leave or close this web page and return later, this offer may no longer be available. ANNUAL FEE $0 intro annual fee for the first year, then $195†¤ NO INTEREST CHARGES No interest charges because you pay your balance in full each month"
                         },  
                         "Diner’s Club": {
                             Cards : true,
-                            Image: "http://www.udcqatar.com/ContentFiles/75Image.jpg",
+                            Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Card%20Diner.jpg",
                             Title:"Diner’s Club",
                             Description:"World-class merchandise: Select from hundreds of brand-name merchandise options, from electroni....​​​​",
                             Pref: "• World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors. • Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments. • Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals. • Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises. • Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more • Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more • Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true"
