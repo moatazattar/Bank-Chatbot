@@ -61,28 +61,28 @@ var bot = new builder.UniversalBot(connector,{
 //     }, 3000);
 // });
 
-// bot.use({
-//     botbuilder: function (session, next) {
-//         // var delta = new Date().getTime();
-//         // session.send(JSON.stringify(delta)); 
-//         // session.send("%s", JSON.stringify(session.sessionState));;
-//         session.send('Set time out 1');
-//         if (session.conversationData.previousAccess) {
-//             session.send('Set time out 2');
-//             // var delta = new Date().getTime() - session.conversationData.previousAccess;
-//             // session.send(new Date().getTime() - session.conversationData.previousAccess);
-//                 if (new Date().getTime() - session.conversationData.previousAccess > 30000) {
-//                 session.send('Set time out 4');
-//                 session.clearDialogStack();
-//             }
-//          }
-//          session.send('Set time out 3');
-//          session.conversationData.previousAccess = session.sessionState.lastAccess;
-//         //  session.send(session.privateConversationData.previousAccess);
-//         //  session.send(session.sessionState.lastAccess);
-//          next();
-//     }
-// });
+bot.use({
+    botbuilder: function (session, next) {
+        // var delta = new Date().getTime();
+        // session.send(JSON.stringify(delta)); 
+        session.send("%s", JSON.stringify(session));;
+        // session.send('Set time out 1');
+        // if (session.conversationData.previousAccess) {
+        //     session.send('Set time out 2');
+        //     // var delta = new Date().getTime() - session.conversationData.previousAccess;
+        //     // session.send(new Date().getTime() - session.conversationData.previousAccess);
+        //         if (new Date().getTime() - session.conversationData.previousAccess > 30000) {
+        //         session.send('Set time out 4');
+        //         session.clearDialogStack();
+        //     }
+        //  }
+        //  session.send('Set time out 3');
+        //  session.conversationData.previousAccess = session.sessionState.lastAccess;
+        // //  session.send(session.privateConversationData.previousAccess);
+        // //  session.send(session.sessionState.lastAccess);
+         next();
+    }
+});
 
 //Recognizers
 /**
@@ -187,9 +187,8 @@ var intents = new builder.IntentDialog({ recognizers: [
         if(!err){
             session.send("welcomeText");
 
-             session.send(JSON.stringify(restify.plugins));
-            var url = require('url');
-            session.send(JSON.stringify(url));
+            session.send(JSON.stringify(session));
+            
 
             session.replaceDialog("userTypeSelection");
         };
@@ -1083,11 +1082,9 @@ var program = {
                session.preferredLocale(locale,function(err){
                    if(!err){
                         session.send("welcomeText");
-                        session.send("welcomeText");
                         
-                        session.send(JSON.stringify(restify.plugins));
-                        var url = require('url');
-                        session.send(JSON.stringify(url));
+                        // var url = require('url');
+                        // session.send(JSON.stringify(url));
                         
                         // var url_parts = url.parse(request.url, true);
                         // var query = url_parts.query;
