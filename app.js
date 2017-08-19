@@ -186,6 +186,11 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.preferredLocale(locale,function(err){
         if(!err){
             session.send("welcomeText");
+
+             session.send(JSON.stringify(restify.plugins));
+            var url = require('url');
+            session.send(JSON.stringify(url));
+
             session.replaceDialog("userTypeSelection");
         };
     })
@@ -1077,6 +1082,7 @@ var program = {
                session.conversationData.lang = locale;
                session.preferredLocale(locale,function(err){
                    if(!err){
+                        session.send("welcomeText");
                         session.send("welcomeText");
                         
                         session.send(JSON.stringify(restify.plugins));
