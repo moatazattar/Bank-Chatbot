@@ -1183,7 +1183,7 @@ var program = {
                 {
                     session.conversationData.isCreditCardStart = results.isCreditCardStart;
                     session.send("CreditCardStarttext");
-                    session.send("%s",session.conversationData.lang);
+                    // session.send("%s",session.conversationData.lang);
                     if(session.conversationData.lang == null)
                     {
                         var locale ="en";
