@@ -43,14 +43,26 @@ var connector = new builder.ChatConnector({
 });
 
 var connectorCreditCard = new builder.ChatConnector({
-    appId:"11244d52-2ed6-46e8-a604-2d8e1b123a62",// process.env.MICROSOFT_APP_ID,
-    appPassword:"KRZUN2jpzt4ZvRR5q7sNwq9"// process.env.MICROSOFT_APP_PASSWORD
+    appId:"11244d52-2ed6-46e8-a604-2d8e1b123a62",
+    appPassword:"KRZUN2jpzt4ZvRR5q7sNwq9"
+});
+
+var connectorLoan = new builder.ChatConnector({
+    appId:"fba8910b-8a76-4463-8010-4e606a6f6d35",
+    appPassword:"DjecTDRJ1Excy1CMnVUdzWr"
 });
 
 // Listen for messages from users 
+server.post('/api/loan/messages', connectorLoan.listen());
 server.post('/api/creditcards/messages', connectorCreditCard.listen());
 
 server.post('/api/messages', connector.listen());
+
+var bot = new builder.UniversalBot(connector,{
+    localizerSettings: { 
+        defaultLocale: "en" 
+    } 
+});
 
 var botCreditCard = new builder.UniversalBot(connectorCreditCard,{
     localizerSettings: { 
@@ -58,7 +70,7 @@ var botCreditCard = new builder.UniversalBot(connectorCreditCard,{
     } 
 });
 
-var bot = new builder.UniversalBot(connector,{
+var botLoan = new builder.UniversalBot(connectorLoan,{
     localizerSettings: { 
         defaultLocale: "en" 
     } 
@@ -537,8 +549,10 @@ var program = {
     Init : function(){
         program.RegisterDialogs(bot);
         program.RegisterDialogs(botCreditCard);
+        program.RegisterDialogs(botLoan);
         bot.dialog("/",intents);
         botCreditCard.dialog("/",intents);
+        botLoan.dialog("/",intents);
     },
     IntentHelper:{
         url : "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/0cfcf9f6-0ad6-47c3-bd2a-094f979484db?subscription-key=13b10b366d2743cda4d800ff0fd10077&timezoneOffset=0&verbose=true&q=",
@@ -1444,6 +1458,16 @@ bot.on('conversationUpdate', function (activity) {
     }
  });
 
+
+ botLoan.on('conversationUpdate', function (activity) {  
+    if (activity.membersAdded) {
+        activity.membersAdded.forEach((identity) => {
+            if (identity.id === activity.address.bot.id) {
+                    botLoan.beginDialog(activity.address, 'LoanStart',{isCreditCardStart : false});
+             }
+         });
+    }
+ });
 //  botCreditCard.on('conversationUpdate', function (activity) {  
 //     if (activity.membersAdded) {
 //         activity.membersAdded.forEach((identity) => {
