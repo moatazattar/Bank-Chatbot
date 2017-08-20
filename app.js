@@ -622,7 +622,7 @@ var program = {
                         session.replaceDialog("StartCreditCard");
                     }
                     if(session.dialogData.startOption == "loan")
-                        session.replaceDialog("LoanStart");
+                        session.beginDialog("LoanStart");
                     
             }
             });
