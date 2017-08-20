@@ -1223,7 +1223,7 @@ var program = {
                         session.conversationData.lang = locale;
                         session.preferredLocale(locale,function(err){
                         if(!err){
-                            session.send("%s",session.preferredLocale())
+                            session.send("%s",session.preferredLocale());
                             var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
                             builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
                         }
