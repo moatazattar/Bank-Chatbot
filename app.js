@@ -1249,7 +1249,7 @@ var program = {
         //////////////////////////
             varBot.dialog("HeroCardsDialog",[
             function(session, args){
-                
+                session.send("1");
                 if(session.conversationData.lang == null)
                     {
                         var locale = program.Helpers.GetLocal(1);
@@ -1259,15 +1259,19 @@ var program = {
                         }
                         })
                     }
+                session.send("2");
 
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
                 session.dialogData.NoOption = args.NoOption;
                 session.dialogData.DisplayOptions = args.DisplayOptions;
+                session.send("3");
 
                 var locale = session.preferredLocale();
+                session.send("4");                
                 var result = program.Options.AvailableProperty[locale][args.DisplayOptions];
                 session.dialogData.item = result;
+                session.send("5");                
                 if(!result.Cards)
                 {
                     builder.Prompts.choice(session, result.Description, result.Items,{listStyle: builder.ListStyle.button});
