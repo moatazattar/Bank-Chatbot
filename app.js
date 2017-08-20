@@ -1187,12 +1187,18 @@ var program = {
                         session.conversationData.lang = "en";
                         session.preferredLocale(locale,function(err){
                             if(!err){
+                                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
+                                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                             };
                         })
                     }
+                    else
+                    {
+                        var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
+                        builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+                    }
                 }
-                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+                
             },
             function(session,results){
                 if (results.response.index == 0) {
@@ -1218,12 +1224,17 @@ var program = {
                         session.conversationData.lang = locale;
                         session.preferredLocale(locale,function(err){
                     if(!err){
+                        var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
                         }
                         })
                     }
                 }
-                var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
+                else
+                    {var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
+            }
+                
             },
             function(session,results){
                 if (results.response.index == 0) {
