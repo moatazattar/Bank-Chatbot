@@ -1251,14 +1251,14 @@ var program = {
             function(session, args){
                 
                 if(session.conversationData.lang == null)
-                {
-                    var locale ="en";
-                    session.conversationData.lang = "en";
-                    session.preferredLocale(locale,function(err){
-                        if(!err){
-                        };
-                    })
-                }
+                    {
+                        var locale = program.Helpers.GetLocal(1);
+                        session.conversationData.lang = locale;
+                        session.preferredLocale(locale,function(err){
+                    if(!err){
+                        }
+                        })
+                    }
 
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
