@@ -102,15 +102,8 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
-    session.send('English');
-    var locale ="en";
-    session.conversationData.lang = "en";
-    session.preferredLocale(locale,function(err){
-        if(!err){
-            // session.send("welcomeText");
-            session.replaceDialog("CreditCardStart");  
-        };
-    })
+    // session.send("welcomeText");
+    session.replaceDialog("CreditCardStart");  
 })
 .matches('LoanStartRecog',(session, args) => {
     session.replaceDialog("LoanStart");  
@@ -143,7 +136,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     }
 ])
 .matches('English',(session, args) => {
-    session.send('English');
+    // session.send('English');
     var locale ="en";
     session.conversationData.lang = "en";
     session.preferredLocale(locale,function(err){
@@ -154,7 +147,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     })
 })
 .matches('Arabic',(session, args) => {
-    session.send('Arabic');
+    // session.send('Arabic');
     var locale ="ar";
     session.conversationData.lang = locale;
     session.preferredLocale(locale,function(err){
@@ -1124,7 +1117,7 @@ var program = {
                 }
             }
         ]);
-``
+
         bot.dialog("CreditCardStart",[
             function(session, results){
                 session.conversationData.isCreditCardStart = results.isCreditCardStart;
