@@ -54,53 +54,7 @@ var bot = new builder.UniversalBot(connector,{
     } 
 });
 
-// var bot = new builder.UniversalBot(connector, function (session) {
-//     session.sendTyping();
-//     setTimeout(function () {
-//         session.send("Hello there...");
-//     }, 3000);
-// });
 
-// bot.use({
-//     botbuilder: function (session, next) {
-//         // var delta = new Date().getTime();
-//         // session.send(JSON.stringify(delta)); 
-//         // session.send("Test Use");
-//         // session.send(app);
-//         session.send("%s", JSON.stringify(session));
-//         // session.send("%s",session);
-
-//         // app.get('/', function(req, res){
-//         //     // console.log(req.query.name);
-//         //     session.send('Response send to client:: '+req.query.name);
-//         // });
-//         //session.send("%s", JSON.stringify(session));
-//         // session.send("%s", JSON.stringify(next));
-//         // session.send('Set time out 1');
-//         // if (session.conversationData.previousAccess) {
-//         //     session.send('Set time out 2');
-//         //     // var delta = new Date().getTime() - session.conversationData.previousAccess;
-//         //     // session.send(new Date().getTime() - session.conversationData.previousAccess);
-//         //         if (new Date().getTime() - session.conversationData.previousAccess > 30000) {
-//         //         session.send('Set time out 4');
-//         //         session.clearDialogStack();
-//         //     }
-//         //  }
-//         //  session.send('Set time out 3');
-//         //  session.conversationData.previousAccess = session.sessionState.lastAccess;
-//         // //  session.send(session.privateConversationData.previousAccess);
-//         // //  session.send(session.sessionState.lastAccess);
-//          next();
-//     }
-// });
-
-//Recognizers
-/**
- *session.conversationData.name
- session.conversationData.Email
- session.conversationData.isRegistered
-
- */
 var QnaRecognizer = new cognitiveservices.QnAMakerRecognizer({
 knowledgeBaseId: "c76d4a69-870f-4d53-8a75-4dc51fa0bdb5", 
 subscriptionKey: "f919a2df8db948dc9dc10bef53fe13ce"});
@@ -148,7 +102,15 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
-    session.replaceDialog("CreditCardStart");  
+    session.send('English');
+    var locale ="en";
+    session.conversationData.lang = "en";
+    session.preferredLocale(locale,function(err){
+        if(!err){
+            // session.send("welcomeText");
+            session.replaceDialog("CreditCardStart");  
+        };
+    })
 })
 .matches('LoanStartRecog',(session, args) => {
     session.replaceDialog("LoanStart");  
@@ -1164,8 +1126,8 @@ var program = {
         ]);
 ``
         bot.dialog("CreditCardStart",[
-            function(session, args){
-                session.conversationData.isCreditCardStart = args.isCreditCardStart;
+            function(session, results){
+                session.conversationData.isCreditCardStart = results.isCreditCardStart;
                 session.send("CreditCardStarttext");
                 if(session.conversationData.lang == null)
                 {
@@ -1460,3 +1422,58 @@ bot.on('conversationUpdate', function (activity) {
          });
     }
  });
+
+
+
+
+
+
+
+
+ // var bot = new builder.UniversalBot(connector, function (session) {
+//     session.sendTyping();
+//     setTimeout(function () {
+//         session.send("Hello there...");
+//     }, 3000);
+// });
+
+// bot.use({
+//     botbuilder: function (session, next) {
+//         // var delta = new Date().getTime();
+//         // session.send(JSON.stringify(delta)); 
+//         // session.send("Test Use");
+//         // session.send(app);
+//         session.send("%s", JSON.stringify(session));
+//         // session.send("%s",session);
+
+//         // app.get('/', function(req, res){
+//         //     // console.log(req.query.name);
+//         //     session.send('Response send to client:: '+req.query.name);
+//         // });
+//         //session.send("%s", JSON.stringify(session));
+//         // session.send("%s", JSON.stringify(next));
+//         // session.send('Set time out 1');
+//         // if (session.conversationData.previousAccess) {
+//         //     session.send('Set time out 2');
+//         //     // var delta = new Date().getTime() - session.conversationData.previousAccess;
+//         //     // session.send(new Date().getTime() - session.conversationData.previousAccess);
+//         //         if (new Date().getTime() - session.conversationData.previousAccess > 30000) {
+//         //         session.send('Set time out 4');
+//         //         session.clearDialogStack();
+//         //     }
+//         //  }
+//         //  session.send('Set time out 3');
+//         //  session.conversationData.previousAccess = session.sessionState.lastAccess;
+//         // //  session.send(session.privateConversationData.previousAccess);
+//         // //  session.send(session.sessionState.lastAccess);
+//          next();
+//     }
+// });
+
+//Recognizers
+/**
+ *session.conversationData.name
+ session.conversationData.Email
+ session.conversationData.isRegistered
+
+ */
