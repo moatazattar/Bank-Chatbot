@@ -1268,7 +1268,8 @@ var program = {
                 session.send("3");
 
                 var locale = session.preferredLocale();
-                session.send("4");                
+                session.send("%s",locale);                
+                session.send("%s",args.DisplayOptions);                
                 var result = program.Options.AvailableProperty[locale][args.DisplayOptions];
                 session.dialogData.item = result;
                 session.send("5");                
