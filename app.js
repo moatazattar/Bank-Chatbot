@@ -1169,7 +1169,12 @@ var program = {
 
         varBot.dialog("StartCreditCard",[
             function(session, results){
-                if(results!= null && results.isCreditCardStart != null )
+                var locale = program.Helpers.GetLocal("1");
+               session.conversationData.lang = locale;
+               session.preferredLocale(locale,function(err){
+                   if(!err){
+                        // session.send("welcomeText");
+                       if(results!= null && results.isCreditCardStart != null )
                 {
                     session.conversationData.isCreditCardStart = results.isCreditCardStart;
                     session.send("CreditCardStarttext");
@@ -1195,6 +1200,11 @@ var program = {
                     var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
                     builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                 }
+                   }
+               }
+            );
+
+                
             },
             function(session,results){
                 if (results.response.index == 0) {
