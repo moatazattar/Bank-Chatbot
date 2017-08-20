@@ -120,23 +120,43 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 
 .matches('MainMenu',(session, args) => {
-    // session.send("welcomeTextinmiddle");
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
     // session.send("Credit Card");
-    session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+    if(session.conversationData.lang == null)
+    {
+        var locale ="en";
+        session.conversationData.lang = locale;
+        session.preferredLocale(locale,function(err){
+        if(!err){
+            }
+                session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+            })
+        }
 })
 .matches('LoanStartRecog',(session, args) => {
     // session.send("Loan");
-    session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
+    if(session.conversationData.lang == null)
+    {
+        var locale ="en";
+        session.conversationData.lang = locale;
+        session.preferredLocale(locale,function(err){
+        if(!err){
+            }
+                session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
+            })
+    }
 })
 .matches('EnglishArabic',(session, args) => {
     // session.send("%s", session.conversationData.isCreditCardStart)
+   
     if(session.conversationData.isCreditCardStart)
         session.beginDialog("setLanguage", {startOption : "creditcard"});
     else
         session.beginDialog("setLanguage", {startOption : "loan"});
+           
+    
 })
 .matches('EnGreetings',(session, args) => {
     session.send("welcomeTextinmiddle");
@@ -636,7 +656,7 @@ var program = {
                     session.replaceDialog("Services");
                 else
                 {                    
-                    var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.conversationData.lang);
+                    var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.preferredLocale());
                     builder.Prompts.choice(session, "areYouMemeber", AlreadyUserOptions,{listStyle: builder.ListStyle.button});
                 }
             },
@@ -1249,15 +1269,7 @@ var program = {
         //////////////////////////
             varBot.dialog("HeroCardsDialog",[
             function(session, args){
-                if(session.conversationData.lang == null)
-                    {
-                        var locale ="en";
-                        session.conversationData.lang = locale;
-                        session.preferredLocale(locale,function(err){
-                    if(!err){
-                        }
-                        })
-                    }
+                
 
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
