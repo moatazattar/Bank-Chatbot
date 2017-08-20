@@ -552,19 +552,41 @@ var program = {
     },
     RegisterDialogs : function(){
 
+        bot.dialog("CreditCard",[
+            function(session, args){
+                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServices,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+                }
+                else if(results.response.index == 1)
+                {
+                    session.send("whichService");
+                    session.endDialog();
+                }
+                else if(results.response.index == 2)
+                {
+                    session.replaceDialog("PersonalBanking");
+                }
+            }
+        ]);
+
         bot.dialog("StartCreditCard",[
             function(session, results){
-                session.conversationData.isCreditCardStart = results.isCreditCardStart;
-                session.send("CreditCardStarttext");
-                if(session.conversationData.lang == null)
-                {
-                    var locale ="en";
-                    session.conversationData.lang = "en";
-                    session.preferredLocale(locale,function(err){
-                        if(!err){
-                        };
-                    })
-                }
+                // session.conversationData.isCreditCardStart = results.isCreditCardStart;
+                // session.send("CreditCardStarttext");
+                // if(session.conversationData.lang == null)
+                // {
+                //     var locale ="en";
+                //     session.conversationData.lang = "en";
+                //     session.preferredLocale(locale,function(err){
+                //         if(!err){
+                //         };
+                //     })
+                // }
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
             },
@@ -1136,27 +1158,7 @@ var program = {
             }
         ]);
         
-        bot.dialog("CreditCard",[
-            function(session, args){
-                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServices,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
-            },
-            function(session,results){
-                if (results.response.index == 0) {
-                   //credit cards hero cards
-                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
-                }
-                else if(results.response.index == 1)
-                {
-                    session.send("whichService");
-                    session.endDialog();
-                }
-                else if(results.response.index == 2)
-                {
-                    session.replaceDialog("PersonalBanking");
-                }
-            }
-        ]);
+        
 
         
 
