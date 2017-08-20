@@ -52,13 +52,13 @@ server.post('/api/creditcards/messages', connectorCreditCard.listen());
 
 server.post('/api/messages', connector.listen());
 
-// var bot = new builder.UniversalBot(connector,{
-//     localizerSettings: { 
-//         defaultLocale: "en" 
-//     } 
-// });
+var botCreditCard = new builder.UniversalBot(connectorCreditCard,{
+    localizerSettings: { 
+        defaultLocale: "en" 
+    } 
+});
 
-var bot = new builder.UniversalBot(connectorCreditCard,{
+var bot = new builder.UniversalBot(connector,{
     localizerSettings: { 
         defaultLocale: "en" 
     } 
@@ -535,8 +535,10 @@ var program = {
         Languages:"العربية|English"
     },
     Init : function(){
-        program.RegisterDialogs();
+        program.RegisterDialogs(bot);
+        program.RegisterDialogs(botCreditCard);
         bot.dialog("/",intents);
+        botCreditCard.dialog("/",intents);
     },
     IntentHelper:{
         url : "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/0cfcf9f6-0ad6-47c3-bd2a-094f979484db?subscription-key=13b10b366d2743cda4d800ff0fd10077&timezoneOffset=0&verbose=true&q=",
@@ -556,9 +558,9 @@ var program = {
                 return deferred.promise;
         }
     },
-    RegisterDialogs : function(){
+    RegisterDialogs : function(varBot){
 
-        bot.dialog("CreditCard",[
+        varBot.dialog("CreditCard",[
             function(session, args){
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServices,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
@@ -582,7 +584,7 @@ var program = {
 
         
 
-        bot.dialog("setLanguage",[
+        varBot.dialog("setLanguage",[
         function(session, args){
             // session.send(session.conversationData.lang);
             session.dialogData.startOption = args.startOption;
@@ -603,7 +605,7 @@ var program = {
         }
     ]);
 
-        bot.dialog("ExistingUser",[
+        varBot.dialog("ExistingUser",[
             function(session,results){
                 if(session.conversationData.isRegistered)
                     session.replaceDialog("Services");
@@ -641,7 +643,7 @@ var program = {
             } 
         ]);
 
-        bot.dialog("EndofService",[
+        varBot.dialog("EndofService",[
             function(session,results){
                   var EndofServiceOptions = program.Helpers.GetOptions(program.Options.EndofService,session.preferredLocale());
                   builder.Prompts.choice(session, "areYouMemeber", EndofServiceOptions,{listStyle: builder.ListStyle.button});
@@ -654,7 +656,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("NotValidUser",[
+        varBot.dialog("NotValidUser",[
             function(session,results){
                   var NotValidUserOptions = program.Helpers.GetOptions(program.Options.NotValidUser,session.preferredLocale());
                   builder.Prompts.choice(session, "NotValidUser", NotValidUserOptions,{listStyle: builder.ListStyle.button});
@@ -669,7 +671,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("CommentsandSendEmail",[
+        varBot.dialog("CommentsandSendEmail",[
             function(session,results){ //get how you heard about us
                 builder.Prompts.text(session, "addComment");
             },
@@ -692,7 +694,7 @@ var program = {
             }
         ]);
         
-        bot.dialog("ValidateUser",[
+        varBot.dialog("ValidateUser",[
             function(session,args){
                 session.beginDialog("getEmail");
                 // session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered });
@@ -745,7 +747,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("CollectInformationCRM",[
+        varBot.dialog("CollectInformationCRM",[
             function(session,args){
                 // session.beginDialog("getEmail");
                 if(session.conversationData.email == null)
@@ -805,7 +807,7 @@ var program = {
             }
         ]);
 
-        bot.dialog('getDateofBirth', [
+        varBot.dialog('getDateofBirth', [
             function (session) {
                 builder.Prompts.time(session, 'dateofbirth');
             },
@@ -814,7 +816,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("getNationality",[
+        varBot.dialog("getNationality",[
             function(session){ //get girst name
                 if(session.conversationData.nationality == null){
                     builder.Prompts.text(session,"nationalityPlease");
@@ -829,7 +831,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("getname",[
+        varBot.dialog("getname",[
             function(session){ //get girst name
                 if(session.conversationData.name == null){
                     builder.Prompts.text(session,"firstNamePlease");
@@ -844,7 +846,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("getFirstname",[
+        varBot.dialog("getFirstname",[
             function(session){ //get fisrt name
                 if(session.conversationData.firstName == null){
                     builder.Prompts.text(session,"firstOnlyNamePlease");
@@ -859,7 +861,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("getLastname",[
+        varBot.dialog("getLastname",[
             function(session){ //get last name
                 if(session.conversationData.lastName == null){
                     builder.Prompts.text(session,"LastOnlyNamePlease");
@@ -874,7 +876,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("getEmail",[
+        varBot.dialog("getEmail",[
             function(session,args){
                 if (args && args.reprompt) {
                     builder.Prompts.text(session, "validEmail");
@@ -892,7 +894,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("getEmailCRM",[
+        varBot.dialog("getEmailCRM",[
             function(session,args){
                 if (args && args.reprompt) {
                         builder.Prompts.text(session, "validEmail");
@@ -942,7 +944,7 @@ var program = {
             }
         ]);
         
-        bot.dialog("getEmailCRMLead",[
+        varBot.dialog("getEmailCRMLead",[
             function(session,args){
                 if (args && args.reprompt) {
                         builder.Prompts.text(session, "validEmail");
@@ -993,7 +995,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("CollectDataCRM",[
+        varBot.dialog("CollectDataCRM",[
             function(session,args){
                 session.dialogData.email = args.Email;
                 session.beginDialog("getFirstname");    
@@ -1036,7 +1038,7 @@ var program = {
             }
         ]);
         
-        bot.dialog("getMobile",[
+        varBot.dialog("getMobile",[
             function(session,args){
                 if (args && args.reprompt) {
                     builder.Prompts.text(session, "validMobile");
@@ -1054,7 +1056,7 @@ var program = {
             }
         ]);
         
-        bot.dialog("manualHelp",[
+        varBot.dialog("manualHelp",[
             function(session){
                 
                 var locale = session.preferredLocale();
@@ -1079,7 +1081,7 @@ var program = {
         
 
 
-        bot.dialog("Services",[
+        varBot.dialog("Services",[
             function(session){
                 var ServicesList = program.Helpers.GetOptions(program.Options.Services,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", ServicesList,{listStyle: builder.ListStyle.button});
@@ -1107,7 +1109,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("PersonalBanking",[
+        varBot.dialog("PersonalBanking",[
             function(session){
                 var personalBankingServicesList = program.Helpers.GetOptions(program.Options.PersonalBankingServices,session.preferredLocale());
                 builder.Prompts.choice(session, "getServicesDynamic", personalBankingServicesList,{listStyle: builder.ListStyle.button});
@@ -1135,7 +1137,7 @@ var program = {
         
         
 
-        bot.dialog("StartCreditCard",[
+        varBot.dialog("StartCreditCard",[
             function(session, results){
                 if(results!= null && results.isCreditCardStart != null )
                 {
@@ -1166,7 +1168,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("LoanStart",[
+        varBot.dialog("LoanStart",[
             function(session, results){
                 if(results != null && results.isCreditCardStart != null )
                 {
@@ -1197,7 +1199,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("LoanOffers",[
+        varBot.dialog("LoanOffers",[
             function(session){
                 var LoanOffersServicesList = program.Helpers.GetOptions(program.Options.LoanOffersServices,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", LoanOffersServicesList,{listStyle: builder.ListStyle.button});
@@ -1220,7 +1222,7 @@ var program = {
         ]);
 
         //////////////////////////
-            bot.dialog("HeroCardsDialog",[
+            varBot.dialog("HeroCardsDialog",[
             function(session, args){
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
@@ -1299,7 +1301,7 @@ var program = {
 
 
         
-        bot.dialog("setLanguageWithPic",[
+        varBot.dialog("setLanguageWithPic",[
             function(session){
                 var msg = new builder.Message(session);
                 msg.attachmentLayout(builder.AttachmentLayout.carousel);
@@ -1425,15 +1427,35 @@ bot.on('conversationUpdate', function (activity) {
     if (activity.membersAdded) {
         activity.membersAdded.forEach((identity) => {
             if (identity.id === activity.address.bot.id) {
-                //    bot.beginDialog(activity.address, 'setLanguageWithPic');
-                    // session.conversationData.isCreditCardStart = true;
-                    bot.beginDialog(activity.address, 'StartCreditCard',{isCreditCardStart : false});
-                    // bot.beginDialog(activity.address, 'LoanStart',{isCreditCardStart : false});
-                //    bot.beginDialog(activity.address, 'LoanStart');
+                   bot.beginDialog(activity.address, 'setLanguageWithPic');
              }
          });
     }
  });
+
+
+ botCreditCard.on('conversationUpdate', function (activity) {  
+    if (activity.membersAdded) {
+        activity.membersAdded.forEach((identity) => {
+            if (identity.id === activity.address.bot.id) {
+                    botCreditCard.beginDialog(activity.address, 'StartCreditCard',{isCreditCardStart : false});
+             }
+         });
+    }
+ });
+
+//  botCreditCard.on('conversationUpdate', function (activity) {  
+//     if (activity.membersAdded) {
+//         activity.membersAdded.forEach((identity) => {
+//             if (identity.id === activity.address.botCreditCard.id) {
+//                 //    bot.beginDialog(activity.address, 'setLanguageWithPic');
+//                     // session.conversationData.isCreditCardStart = true;
+//                     // bot.beginDialog(activity.address, 'LoanStart',{isCreditCardStart : false});
+//                 //    bot.beginDialog(activity.address, 'LoanStart');
+//              }
+//          });
+//     }
+//  });
 
 
 
