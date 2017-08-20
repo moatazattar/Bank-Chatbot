@@ -112,7 +112,9 @@ var EnglishRecognizers = {
         // greetingRecognizer : new builder.RegExpRecognizer( "Greeting", /(السلام عليكم|صباح الخير|مساء الخير|مرحباً)/i),
         arabicRecognizer : new builder.RegExpRecognizer( "Arabic", /(العربية)/i), 
         englishRecognizer : new builder.RegExpRecognizer( "English", /(English)/i),
-        ChangeLanguageRecognizer : new builder.RegExpRecognizer( "EnglishArabic", /(Change Language | تغيير اللغه)/i)
+        ChangeLanguageRecognizer : new builder.RegExpRecognizer( "EnglishArabic", /(Change Language | تغيير اللغه)/i),
+        CreditCardStartRecognizer : new builder.RegExpRecognizer( "CreditCardStart", /(View all available Credit Card Offers|عرض بطاقات الإئتمان المتاحه)/i),
+        LoanStartRecognizer : new builder.RegExpRecognizer( "LoanStart", /(View all available Loans|عرض القروض المتاحه)/i)
     }
 
 
@@ -142,6 +144,12 @@ var intents = new builder.IntentDialog({ recognizers: [
 .matches('MainMenu',(session, args) => {
     // session.send("welcomeTextinmiddle");
     session.beginDialog("ExistingUser");  
+})
+.matches('CreditCardStart',(session, args) => {
+    session.beginDialog("CreditCardStart");  
+})
+.matches('LoanStart',(session, args) => {
+    session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
     if(session.conversationData.isCreditCardStart)
@@ -175,7 +183,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.conversationData.lang = "en";
     session.preferredLocale(locale,function(err){
         if(!err){
-            session.send("welcomeText");
+            // session.send("welcomeText");
             session.replaceDialog("ExistingUser");
         };
     })
@@ -186,7 +194,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.conversationData.lang = locale;
     session.preferredLocale(locale,function(err){
         if(!err){
-            session.send("welcomeText");
+            // session.send("welcomeText");
             session.replaceDialog("ExistingUser");
         };
     })
@@ -1436,8 +1444,9 @@ bot.on('conversationUpdate', function (activity) {
     if (activity.membersAdded) {
         activity.membersAdded.forEach((identity) => {
             if (identity.id === activity.address.bot.id) {
-                   bot.beginDialog(activity.address, 'setLanguageWithPic');
-                //    bot.beginDialog(activity.address, 'CreditCardStart');
+                //    bot.beginDialog(activity.address, 'setLanguageWithPic');
+                    session.conversationData.isCreditCardStart = true;
+                    bot.beginDialog(activity.address, 'CreditCardStart');
                 //    bot.beginDialog(activity.address, 'LoanStart');
              }
          });
