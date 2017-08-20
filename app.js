@@ -1064,21 +1064,22 @@ var program = {
 
         bot.dialog("setLanguage",[
             function(session, args){
-                session.send(JSON.stringify(args));
+                session.send(session.conversationData.lang);
                 session.dialogData.startOption = args.startOption;
                 builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
-                session.send(JSON.stringify(results));
                 var locale = program.Helpers.GetLocal(results.response.index);
-                session.send(JSON.stringify(results));
                 session.conversationData.lang = locale;
+                session.send(locale);
                 session.preferredLocale(locale,function(err){
                     if(!err){
-                session.send(JSON.stringify(results));
-                session.send(JSON.stringify(session.dialogData));
+                        session.send(JSON.stringify(session.dialogData));
                         if(session.dialogData.startOption == "creditcard")
+                        {
+                            session.send(JSON.stringify(session.dialogData));
                             session.replaceDialog("CreditCardStart");
+                        }
                         if(session.dialogData.startOption == "loan")
                             session.replaceDialog("LoanStart");
                         
