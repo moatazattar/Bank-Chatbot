@@ -148,10 +148,10 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
-    session.beginDialog("CreditCardStart");  
+    session.replaceDialog("CreditCardStart");  
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.beginDialog("LoanStart");  
+    session.replaceDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
     session.send("%s", session.conversationData.isCreditCardStart)
@@ -1069,17 +1069,18 @@ var program = {
                 builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
-               var locale = program.Helpers.GetLocal(results.response.index);
-               session.conversationData.lang = locale;
-               session.preferredLocale(locale,function(err){
-                   if(!err){
+                session.send(JSON.stringify(results));
+                var locale = program.Helpers.GetLocal(results.response.index);
+                session.conversationData.lang = locale;
+                session.preferredLocale(locale,function(err){
+                    if(!err){
                         if(session.dialogData.startOption == "creditcard")
                             session.replaceDialog("CreditCardStart");
                         if(session.dialogData.startOption == "loan")
                             session.replaceDialog("LoanStart");
                         
                 }
-               });
+                });
             }
         ]);
         bot.dialog("Services",[
@@ -1164,13 +1165,11 @@ var program = {
                 session.send("CreditCardStarttext");
                 if(session.conversationData.lang == null)
                 {
-                    var locale = program.Helpers.GetLocal(1);
-                    session.conversationData.lang = locale;
+                    var locale ="en";
+                    session.conversationData.lang = "en";
                     session.preferredLocale(locale,function(err){
-                   if(!err){
-                        // session.send("welcomeText");
-                        // session.replaceDialog("ExistingUser");
-                    }
+                        if(!err){
+                        };
                     })
                 }
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
