@@ -102,7 +102,7 @@ var bot = new builder.UniversalBot(connector,{
 
  */
 var QnaRecognizer = new cognitiveservices.QnAMakerRecognizer({
-knowledgeBaseId: "d5ee930b-f551-4afc-820f-117baa9810c9", 
+knowledgeBaseId: "c76d4a69-870f-4d53-8a75-4dc51fa0bdb5", 
 subscriptionKey: "f919a2df8db948dc9dc10bef53fe13ce"});
 
 var EnglishRecognizers = {
@@ -111,7 +111,8 @@ var EnglishRecognizers = {
         MainMenuRecognizer : new builder.RegExpRecognizer( "MainMenu",/^(main menu|back to main menu)/i),///(^(?=.*(main menu|back to main menu|)))/i),
         // greetingRecognizer : new builder.RegExpRecognizer( "Greeting", /(السلام عليكم|صباح الخير|مساء الخير|مرحباً)/i),
         arabicRecognizer : new builder.RegExpRecognizer( "Arabic", /(العربية)/i), 
-        englishRecognizer : new builder.RegExpRecognizer( "English", /(English)/i)
+        englishRecognizer : new builder.RegExpRecognizer( "English", /(English)/i),
+        ChangeLanguageRecognizer : new builder.RegExpRecognizer( "EnglishArabic", /(Change Language | تغيير اللغه)/i)
     }
 
 
@@ -123,6 +124,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     EnglishRecognizers.MainMenuRecognizer,
     EnglishRecognizers.arabicRecognizer,
     EnglishRecognizers.englishRecognizer,
+    EnglishRecognizers.ChangeLanguageRecognizer,
     ] 
 })
 
@@ -138,12 +140,18 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 
 .matches('MainMenu',(session, args) => {
-    session.send("welcomeTextinmiddle");
-    session.beginDialog("userTypeSelection");  
+    // session.send("welcomeTextinmiddle");
+    session.beginDialog("ExistingUser");  
+})
+.matches('EnglishArabic',(session, args) => {
+    if(session.conversationData.isCreditCardStart)
+        session.beginDialog("setLanguage", {startOption : "creditcard"});
+    else
+        session.beginDialog("setLanguage", {startOption : "loan"});
 })
 .matches('EnGreetings',(session, args) => {
     session.send("welcomeTextinmiddle");
-    session.beginDialog("userTypeSelection"); 
+    session.beginDialog("ExistingUser"); 
 })
 .matches('qna',[
     function (session, args, next) {
@@ -158,7 +166,7 @@ var intents = new builder.IntentDialog({ recognizers: [
             session.endDialog();
         }
         else if(results.response.index == 1)
-            session.replaceDialog("userTypeSelection");
+            session.replaceDialog("ExistingUser");
     }
 ])
 .matches('English',(session, args) => {
@@ -195,11 +203,11 @@ var program = {
         questionBeforeGenericHelp : 3,
         EmailTemplate : {
             Content:{
-                en:"Dear {{user}} <br/> Thanks alot for your interest in UDC, our team will study your inquiry and will get back to you as soon as possible <br/><table border=1><tr><td>Mobile</td><td>{{mobile}}</td></tr><tr><td>property</td><td>{{property}}</td></tr><tr><td>Comment</td><td>{{comment}}</td></tr></table><br/>Regards,<br/>UDC Team",
+                en:"Dear {{user}} <br/> Thanks alot for your interest in Advance Bank, our team will study your inquiry and will get back to you as soon as possible <br/><table border=1><tr><td>Mobile</td><td>{{mobile}}</td></tr><tr><td>property</td><td>{{property}}</td></tr><tr><td>Comment</td><td>{{comment}}</td></tr></table><br/>Regards,<br/>Advance Bank Team",
                 ar:"<div style='direction:rtl'> عزيزي {{user}} <br/> شكراً على اهتمامك بعقارات الشركه المتحده، سوف نقوم بدراسة طلبك والرد عليك بأقرب فرصة ممكنة <br/><br/><table border=1><tr><td>رقم جوالك</td><td>{{mobile}}</td></tr><tr><td>اهتماماتك</td><td>{{property}}</td></tr><tr><td>الاستعلام عنه</td><td>{{comment}}</td></tr></table><br/> مع تحيات فريق عمل الشركه المتحده</div>"
             },
             Subject:{
-                en:"Thanks from UDC",
+                en:"Thanks from Advance Bank",
                 ar:"شكراً من الشركه المتحده"
             }
         },
@@ -209,61 +217,9 @@ var program = {
         }
     },
     Options:{
-        Zones: {
-            en:{
-                "Ras Bufontas":{Description:"Ras Bufontas"},
-                "Ym Alhaloul":{Description:"Ym Alhaloul"},
-                "I’m not sure":{Description:"I’m not sure"}
-            },
-            ar:{
-                "راس أبوفنطاس":{Description:"راس أبوفنطاس"},
-                "أم الهلول":{Description:"أم الهلول"},
-                "لست متأكد":{Description:"لست متأكد"}
-            }
-        },
-        Sectors: {
-            en:{
-                "Aviation/Aerospace":{Description:"Aviation/Aerospace"},
-                "Constitutions & Engineering (excluding main or subcontractor)":{Description:"Constitutions & Engineering (excluding main or subcontractor)"},
-                "Construction Materials (including green/sustainable)":{Description:"Construction Materials (including green/sustainable)"},
-                "Electrical equipment":{Description:"Electrical equipment"},
-                "Food & Beverage processing":{Description:"Food & Beverage processing"},
-                "Healthcare Equipment/Services":{Description:"Healthcare Equipment/Services"},
-                "ICT (Hardware, software, new media)":{Description:"ICT (Hardware, software, new media)"},
-                "Logistics/Transportation":{Description:"Logistics/Transportation"},
-                "Machinery":{Description:"Machinery"},
-                "Metals (intermediate and finished goods)":{Description:"Metals (intermediate and finished goods)"},
-                "Nonprofit/NGO/Government/Semi-government":{Description:"Nonprofit/NGO/Government/Semi-government"},
-                "Oil & Gas Equipment":{Description:"Oil & Gas Equipment"},
-                "Oil & Gas Services":{Description:"Oil & Gas Services"},
-                "Pharmaceutical/Biotechnology/Life Science":{Description:"Pharmaceutical/Biotechnology/Life Science"},
-                "Plastics (intermediate and finished goods)":{Description:"Plastics (intermediate and finished goods)"},
-                "Professional/Business/Commercial Services":{Description:"Professional/Business/Commercial Services"},
-                "Renewable/Sustainable Technology":{Description:"Renewable/Sustainable Technology"},
-                "Vehicles (light and heavy manufacturing, including components)":{Description:"Vehicles (light and heavy manufacturing, including components)"},
-                "Wholesale/Distributor/Trader/Retail":{Description:"Wholesale/Distributor/Trader/Retail"}
-            },
-            ar:{
-                "الأتصالات وتكنولوجيا المعلومات (الأجهزة، البرمجيات، وسائل الأعلام الحديثة)":{Description:"الأتصالات وتكنولوجيا المعلومات (الأجهزة، البرمجيات، وسائل الأعلام الحديثة)"},
-                "الآليات":{Description:"الآليات"},
-                "الأمداد والتجهيز/النقل":{Description:"الأمداد والتجهيز/النقل"},
-                "البلاستيكيات (سلع النهائية والوسيطة)":{Description:"البلاستيكيات (سلع النهائية والوسيطة)"},
-                "الصناعات الدوائية/التكنولوجية الحيوية/علم الحياة":{Description:"الصناعات الدوائية/التكنولوجية الحيوية/علم الحياة"},
-                "الصناعات الهندسية والبنى الأساسية (بستثناء المتعاقدين الرئيسيين والفرعيين)":{Description:"الصناعات الهندسية والبنى الأساسية (بستثناء المتعاقدين الرئيسيين والفرعيين)"},
-                "الطيران/الصناعات الجوية":{Description:"الطيران/الصناعات الجوية"},
-                "العربات (التصنيع الخفيف والثقيل بمافي ذلك الأجزاء)":{Description:"العربات (التصنيع الخفيف والثقيل بمافي ذلك الأجزاء)"},
-                "المعادن (سلع النهائية والوسيطة)":{Description:"المعادن (سلع النهائية والوسيطة)"},
-                "بيع الجملة/التوزيع/التجاري/التجزئة":{Description:"بيع الجملة/التوزيع/التجاري/التجزئة"},
-                "تجهيز المواد الغذائية والمشروبات":{Description:"تجهيز المواد الغذائية والمشروبات"},
-                "تكنولوجيا إعادة التجديد / الأستدامة":{Description:"تكنولوجيا إعادة التجديد / الأستدامة"},
-                "خدمات النفط والغاز":{Description:"خدمات النفط والغاز"},
-                "خدمات حرفية/أعمال/تجارية":{Description:"خدمات حرفية/أعمال/تجارية"},
-                "خدمات ومعدات الرعاية الصحية":{Description:"خدمات ومعدات الرعاية الصحية"},
-                "غير ربحية/مجتمع مدني/حكومي/شبه حكومي":{Description:"غير ربحية/مجتمع مدني/حكومي/شبه حكومي"},
-                "معدات الكهربائية":{Description:"معدات الكهربائية"},
-                "معدات النفط والغاز":{Description:"معدات النفط والغاز"},
-                "مواد البناء (بما في ذلك الخضراء / المتوافقة مع مفهوم الأستدامة)":{Description:"مواد البناء (بما في ذلك الخضراء / المتوافقة مع مفهوم الأستدامة)"}
-            }
+        LanguageListStart:{
+            "العربيه":{Description:"العربيه"},
+            "English":{Description:"English"},
         },
         UserType:{
             en:{
@@ -285,6 +241,28 @@ var program = {
                 "لا, الرجوع للقايمه الريئسيه":{Description:"لا, الرجوع للقايمه الريئسيه"}
             }
         },
+        EndofService:{
+            en:{
+               "Return to Main Menu":{Description:"Return to Main Menu"},
+                "No Thanks":{Description:"No Thanks"},
+            },
+            ar:{
+               "رجوع للقائمه الرئيسيه":{Description:"رجوع للقائمه الرئيسيه"},
+                "لا شكرا":{Description:"لا شكرا"},
+            }
+        },
+        NotValidUser:{
+            en:{
+                "Call Us":{Description:"Call Us"},
+                "Visit Us":{Description:"Visit Us"},
+                "Try Again":{Description:"No Thanks"},
+            },
+            ar:{
+               "أتصل بنا":{Description:"أتصل بنا"},
+               "قم بزيارتنا":{Description:"قم بزيارتنا"},
+               "محاوله مره أخري":{Description:"محاوله مره أخري"},
+            }
+        },
         AlreadyUser:{
             en:{
                "Yes":{Description:"Yes"},
@@ -297,12 +275,12 @@ var program = {
         },
         PropertyInterest:{
             en:{
-               "Yes I am interested":{Description:"Yes"},
+               "More Info":{Description:"Yes"},
                 "No":{Description:"No"},
                 "Show All":{Description:"Show All"}
             },
             ar:{
-                "نعم":{Description:"نعم"},
+                "المزيد":{Description:"نعم"},
                 "لا":{Description:"لا"},
                 "إظهر الكل":{Description:"إظهر الكل"}
             }
@@ -325,54 +303,62 @@ var program = {
             en:{
                 "View all available Credit Card Offers":{Description:"View all available Credit Card Offers"},
                 "Ask about Frequent Flier Miles offer":{Description:"Ask about Frequent Flier Miles offer"},
+                "Back":{Description:"Back"},
             },
             ar:{
                 "عرض بطاقات الإئتمان المتاحه":{Description:"عرض بطاقات الإئتمان المتاحه"},
                 "عروض الماتحه":{Description:"عروض الماتحه"},
+                "الرجوع":{Description:"الرجوع"},
+            }
+        },
+        CreditCardServicesStart:{
+            en:{
+                "View all available Credit Card Offers":{Description:"View all available Credit Card Offers"},
+                "Main Menu":{Description:"Main Menu"},
+                "Change Language | تغيير اللغه":{Description:"Change Language| تغيير اللغه"},
+            },
+            ar:{
+                "عرض بطاقات الإئتمان المتاحه":{Description:"عرض بطاقات الإئتمان المتاحه"},
+                "القائمه الرئيسيه":{Description:"القائمه الرئيسيه"},
+                "Change Language | تغيير اللغه":{Description:"Change Language| تغيير اللغه"},
+            }
+        },
+        LoanServicesStart:{
+            en:{
+                "View all available Loans":{Description:"View all available Loans"},
+                "Main Menu":{Description:"Main Menu"},
+                "Change Language | تغيير اللغه":{Description:"Change Language| تغيير اللغه"},
+            },
+            ar:{
+                "عرض القروض المتاحه":{Description:"عرض القروض المتاحه"},
+                "القائمه الرئيسيه":{Description:"القائمه الرئيسيه"},
+                "Change Language | تغيير اللغه":{Description:"Change Language| تغيير اللغه"},
             }
         },
         LoanOffersServices:{
             en:{
                 "View all available Loan Offers":{Description:"View all available Credit Card Offers"},
                 "Ask us any question":{Description:"Ask us any question"},
+                "Back":{Description:"Back"},
             },
             ar:{
                 "عروض القروض المتاحه":{Description:"عروض القروض المتاحه"},
                 "إسالنا...":{Description:"إسالنا..."},
+                "الرجوع":{Description:"الرجوع"},
             }
         },
        PersonalBankingServices :{
             en:{
                 "Our Credit Cards":{Description:"Our Credit Cards"},
-                "Our Accounts":{Description:"Our Accounts"},
                 "Our Loan Offers":{Description:"Our Loan Offers"},
+                "Our Accounts":{Description:"Our Accounts"},
+                "Back":{Description:"Back"},
             },
             ar:{
                 "بطاقات الإئتمان":{Description:"بطاقات الإئتمان"},
-                "حساباتنا":{Description:"حساباتنا"},
                 "عروض القروض":{Description:"عروض القروض"},
-            }
-        },
-        Operations: {
-            en:{
-                "Assembly facility":{Description:"Assembly facility"},
-                "Call Center":{Description:"Call Center"},
-                "Corporate / Reginoal HQ":{Description:"Corporate / Reginoal HQ"},
-                "Maintenance & Repair Facility":{Description:"Maintenance & Repair Facility"},
-                "Marketing / Sales Office":{Description:"Marketing / Sales Office"},
-                "Production facility":{Description:"Production facility"},
-                "Training Facility":{Description:"Training Facility"},
-                "Warehouse / Distribution Center":{Description:"Warehouse / Distribution Center"}
-            },
-            ar:{
-                "مرافق الأنتاج":{Description:"مرافق الأنتاج"},
-                "مرافق التجميع":{Description:"مرافق التجميع"},
-                "مرافق التدريب":{Description:"مرافق التدريب"},
-                "مرافق الصيانة والأصلاح":{Description:"مرافق الصيانة والأصلاح"},
-                "مركز الأتصال":{Description:"مركز الأتصال"},
-                "مركز التخزين / التوزيع":{Description:"مركز التخزين / التوزيع"},
-                "مقر الشركة المحلي / الأقليمي":{Description:"مقر الشركة المحلي / الأقليمي"},
-                "مكاتب التسويق / المبيعات":{Description:"مكاتب التسويق / المبيعات"}
+                "حساباتنا":{Description:"حساباتنا"},
+                "الرجوع":{Description:"الرجوع"},
             }
         },
         AvailableProperty:{
@@ -438,37 +424,37 @@ var program = {
                             Pref: "• World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors. • Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments. • Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals. • Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises. • Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more • Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more • Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true"
                         }
                     }   
-                }
-            },
-            "Available Loan Options":{
+                },
+                "Available Loan Options":{
                     Cards : true,
                     Title:"Available Loan Options", 
                     Description:"please select one of the below",
                     Items:{
                         "Personal Loan": {
                             Cards : true,
-                            Image: "http://www.udcqatar.com/ContentFiles/74Image.jpg",
-                            Title:"Platinum Card",
+                            Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Loan%20Personal.png",
+                            Title:"Personal Loan",
                             Description:"No matter what your aspirations and needs, our financing packages and offering...",
                             Pref: "No matter what your aspirations and needs, our financing packages and offerings will help you and provide you with the necessary support to get there. With our products and offerings package, you are now closer to many things you desired, such as going on your dream vacation, providing the best educational opportunities for your children, celebrating special occasions as planned or receiving the most advanced and up-to-date medical treatment, in addition to pampering yourself with the most plush and prestigious products. Types of Personal Loans: Personal Loan against Salary Personal Loan against Fixed Deposit: You can get the cash you need while maintaining your fixed deposit and accruing profits. With a personal loan against your fixed term deposit, you get cash up to 90% of your fixed deposit value at the lowest interest rates upon application using only your ID. IPO Loans: Whether you are an experienced stock market investor, or just getting started, an IPO finance loan can help you grab the best opportunities."
                         },  
                         "Home Loan": {
                             Cards : true,
-                            Image: "http://www.udcqatar.com/ContentFiles/73Image.jpg",
+                            Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Loan%20Home.png",
                             Title:"Home Loan",
                             Description:"We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: • Low interest rates.....",
                             Pref: "We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: • Low interest rates (1) • No management fees • Flexible monthly repayments • Financing ready properties, under construction and Land (2) • Programs for salaried & self-employed customers • Dedicated mortgage loan center for all mortgage financing services * All loans subject to bank approval. The bank reserves the right to request additional documents and to impose additional conditions in order to complete the approval process."
                         },  
-                        "Diner’s Club": {
+                        "Car Loan": {
                             Cards : true,
-                            Image: "http://www.udcqatar.com/ContentFiles/75Image.jpg",
-                            Title:"Diner’s Club",
-                            Description:"World-class merchandise: Select from hundreds of brand-name merchandise options, from electroni....​​​​",
-                            Pref: "• World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors. • Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments. • Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals. • Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises. • Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more • Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more • Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true"
+                            Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Loan%20Car.png",
+                            Title:"Car Loan",
+                            Description:"Drive the car of your dreams today. An AdvancaBank Vehicle Loan is affordable and provides flexible t....​​​​",
+                            Pref: "Drive the car of your dreams today. An AdvancaBank Vehicle Loan is affordable and provides flexible tenure options to meet every need. Features: • Low interest rates • No management fees • Fast approval • Up to 100% financing • Flexible 6 to 72 month repayment options • Financing of new and pre-owned cars • Discounted comprehensive insurance • Down payment assistance Next step • Salary account with the Bank required"
                         }
                     }   
                 }
-            },
+            }
+            ,
             ar:{
                 "المكان":{ 
                     Cards : false,
@@ -599,35 +585,27 @@ var program = {
     },
     RegisterDialogs : function(){
 
-         bot.dialog("askagain",[
-            function(session,results){
-               builder.Prompts.choice(session, "alreadySubmitted" ,program.Constants.YesNo[session.preferredLocale()],{listStyle: builder.ListStyle.button});
-            },
-            function(session,results){
-                var index = results.response.index;
-                if(index==0)
-                {
-                    session.replaceDialog("invest");
-                }
-                else{
-                    session.endDialog();
-                }
-            }
-        ]);
         bot.dialog("ExistingUser",[
             function(session,results){
-                  var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.preferredLocale());
-                  builder.Prompts.choice(session, "areYouMemeber", AlreadyUserOptions,{listStyle: builder.ListStyle.button});
+                if(session.conversationData.isRegistered)
+                    session.replaceDialog("Services");
+                else
+                {                    
+                    var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.preferredLocale());
+                    builder.Prompts.choice(session, "areYouMemeber", AlreadyUserOptions,{listStyle: builder.ListStyle.button});
+                }
             },
             function(session,results){
             //    session.conversationData.userType = results.response.entity;
                 if(results.response.index == 1)
                 {
+                    session.conversationData.isRegistered = false;
                     session.replaceDialog("Services");
                 }
                 else
                 {
-                    session.replaceDialog("Services"); 
+                    session.conversationData.isRegistered = true;
+                    session.replaceDialog("ValidateUser"); 
                 }
             },
                function (session,results) {
@@ -642,61 +620,39 @@ var program = {
                 if(session.CRMResult)
                     session.send("Hi Mr. "+ session.conversationData.firstName);
                 session.replaceDialog("Services");
-
-                /*session.send("whichService");
-                session.endDialog();*/
-                // session.replaceDialog("Services");
             } 
         ]);
-        bot.dialog("welcome",[
+
+        bot.dialog("EndofService",[
             function(session,results){
-                if(session.conversationData.name == null){
-                    builder.Prompts.text(session,"askForEmail");
-                }
-                else{
-                    session.send("greetingAgain",session.conversationData.name)
-                    session.endDialog();
-                }
+                  var EndofServiceOptions = program.Helpers.GetOptions(program.Options.EndofService,session.preferredLocale());
+                  builder.Prompts.choice(session, "areYouMemeber", EndofServiceOptions,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
-                var name = results.response;
-                session.conversationData.name = name;
-                session.endDialog("greetingAsk",name);
+                if(results.response.index == 0)
+                    session.replaceDialog("Services"); 
+                else
+                    session.send("endofservice")
             }
         ]);
-        bot.dialog("CollectInformation",[
-            function(session,args){
-                // session.send(JSON.stringify(args));
-                // session.dialogData.property = args;
-                // session.send('%s',session.conversationData.InterestedProperty)
-                session.beginDialog("getname");    
+
+        bot.dialog("NotValidUser",[
+            function(session,results){
+                  var NotValidUserOptions = program.Helpers.GetOptions(program.Options.NotValidUser,session.preferredLocale());
+                  builder.Prompts.choice(session, "NotValidUser", NotValidUserOptions,{listStyle: builder.ListStyle.button});
             },
-            function(session,results){ //get email
-                session.dialogData.name =  session.conversationData.name;
-                session.beginDialog("getEmail");
-            },
-            function(session,results){ //get mobile
-                session.dialogData.email = results.response;
-                session.beginDialog("getMobile");
-            },
-            // function(session,results){ //get zone
-            //     session.dialogData.mobile = results.response;
-            //     var zones = program.Helpers.GetOptions(program.Options.Zones,session.preferredLocale());
-            //     builder.Prompts.choice(session, "getZones", zones,{listStyle: builder.ListStyle.button});
-            // },
-            // function(session,results){ //get sector
-            //     session.dialogData.zone = results.response.entity;
-            //     var sectors = program.Helpers.GetOptions(program.Options.Sectors,session.preferredLocale());
-            //     builder.Prompts.choice(session, "getSectors", sectors,{listStyle: builder.ListStyle.button});
-            // },
-            // function(session,results){ //get operation
-            //     session.dialogData.sector = results.response.entity;
-            //     var operations = program.Helpers.GetOptions(program.Options.Operations,session.preferredLocale());
-            //     //نوع العمل الذي ترغب بتأسيسة
-            //     builder.Prompts.choice(session, "getOperations", operations,{listStyle: builder.ListStyle.button});
-            // },
+            function(session,results){
+                if(results.response.index == 0)
+                    session.send("callus"); 
+                else if(results.response.index == 1)
+                    session.send('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3607.5577835921285!2d51.5055749!3d25.285457299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45dad01d5d434b%3A0x7370ee6db605fda7!2sBarwa+Tower+3%2C+C+Ring+Rd%2C+Doha!5e0!3m2!1sen!2sqa!4v1503151592480" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>').endDialog();
+                else if(results.response.index == 2)
+                    session.replaceDialog("ValidateUser");
+            }
+        ]);
+
+        bot.dialog("CommentsandSendEmail",[
             function(session,results){ //get how you heard about us
-                session.dialogData.mobile = results.response;
                 builder.Prompts.text(session, "addComment");
             },
             function(session,results){ // end
@@ -704,20 +660,118 @@ var program = {
                 session.send(session.dialogData.name);
                 //Send Email
                 program.Helpers.SendEmail({
+                    email:session.conversationData.email,
+                    user:session.conversationData.firstName,
+                    mobile:session.conversationData.mobile,
+                    property:session.conversationData.InternetedProduct,
+                    comment:session.dialogData.comment
+                },session.preferredLocale());
+                session.send("thanksInquiry",session.conversationData.email);
+                session.conversationData.applicationSubmitted = true;
+                
+                session.replaceDialog("EndofService");
+
+            }
+        ]);
+        
+        bot.dialog("ValidateUser",[
+            function(session,args){
+                session.beginDialog("getEmail");
+                // session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered });
+            },
+            function (session,results) {
+                session.dialogData.email =  results.response;
+                session.beginDialog("getMobile");
+            },
+            function(session,results){ //get mobile
+                session.dialogData.mobile = results.response;
+                session.beginDialog("getDateofBirth");
+            },
+            function(session,results){ //get how you heard about us
+                //{“type”:“chrono.duration”,“entity”:“13-1-1989”,“startIndex”:0,“endIndex”:9,“resolution”:{“resolution_type”:“chrono.duration”,
+                    // “start”:“1989-01-13T09:00:00.000Z”,“ref”:“2017-08-19T14:14:10.558Z”},“score”:1}
+                session.conversationData.isRegistered = false;
+                var dateFormat = require('dateformat');
+                var inputDate= results.response.resolution.start;
+                var  inputDateyyyymm =  dateFormat(inputDate, "isoDateTime").substring(0,10);
+                // session.send("%s", inputDateyyyymm);
+                dynamicsWebApi.retrieveAll("contacts", ["firstname","emailaddress1","mobilephone", "birthdate"], "statecode eq 0").then(function (response) {
+                    var records = response.value;
+                    // session.send("%s",JSON.stringify(records));
+                    if(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()) > 0 )
+                    {
+                        for (var i = 0; i < records.length; i++) {
+                            var element = records[i];
+                            
+                            if (element.emailaddress1 != null && element.emailaddress1.toLowerCase() == session.dialogData.email.toLowerCase()) {
+                                if (element.mobilephone != null && element.mobilephone == session.dialogData.mobile ) {
+                                    if (inputDateyyyymm == element.birthdate)  { //1989-01-13
+                                        session.conversationData.isRegistered = true;
+                                        session.conversationData.firstName = element.firstname;
+                                        session.conversationData.email = session.dialogData.email;
+                                        session.conversationData.mobile = element.mobilephone;
+                                        session.send("ValidUser",element.firstname)
+                                        session.replaceDialog("Services");
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        session.replaceDialog("NotValidUser");
+                    }
+                }
+                )
+                .catch(function (error){
+                    session.replaceDialog("NotValidUser");
+                });
+            }
+        ]);
+
+        bot.dialog("CollectInformationCRM",[
+            function(session,args){
+                // session.beginDialog("getEmail");
+                if(session.conversationData.email == null)
+                    session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered });
+                else
+                    session.replaceDialog("CommentsandSendEmail")  
+            },
+            function (session,results) {
+                if(session.CRMResult)
+                {
+                    session.send("EmailCRM", session.conversationData.firstName);
+                    session.replaceDialog("CommentsandSendEmail")
+                }
+                else
+                {
+                    session.dialogData.email = results.response;
+                    session.beginDialog("getname");   
+                }
+            },
+            function(session,results){ //get mobile
+                session.dialogData.name =  session.conversationData.name;
+                session.beginDialog("getMobile");
+            },
+            function(session,results){ //get how you heard about us
+                session.dialogData.mobile = results.response;
+                builder.Prompts.text(session, "addComment");
+            },
+            function(session,results){ // end
+                session.dialogData.comment = results.response;
+                // session.send(session.dialogData.name);
+                // session.send(session.dialogData.email);
+                //Send Email
+                program.Helpers.SendEmail({
                     email:session.dialogData.email,
                     user:session.dialogData.name,
                     mobile:session.dialogData.mobile,
-                    property:session.conversationData.InterestedProperty,
-                    // sector:session.dialogData.sector,
-                    // operation:session.dialogData.operation,
-                    // heard:session.dialogData.heard,
+                    property:session.conversationData.InternetedProduct,
                     comment:session.dialogData.comment
                 },session.preferredLocale());
                 session.send("thanksInquiry",session.dialogData.email);
                 session.conversationData.applicationSubmitted = true;
 
                 var lead = {
-                    subject: "Intersted in "+ session.conversationData.InterestedProperty,
+                    subject: "Intersted in "+ session.conversationData.InternetedProduct,
                     firstname: session.dialogData.name,
                     // lastname: session.conversationData.lastName,
                     mobilephone: session.dialogData.mobile,
@@ -727,12 +781,33 @@ var program = {
                 dynamicsWebApi.create(lead, "leads").then(function (id) {
                     // session.send("Your data had been saved");
                 }).catch(function (error) {
-                    //session.send("Item Not Added");
+                    session.send("Item Not Added");
                 })
-                // session.endDialog();
+                session.replaceDialog("EndofService");
+            }
+        ]);
 
-                session.send("welcomeTextinmiddle");
-                session.replaceDialog("userTypeSelection");
+        bot.dialog('getDateofBirth', [
+            function (session) {
+                builder.Prompts.time(session, 'dateofbirth');
+            },
+            function (session, results) {
+                session.endDialogWithResult(results);
+            }
+        ]);
+
+        bot.dialog("getNationality",[
+            function(session){ //get girst name
+                if(session.conversationData.nationality == null){
+                    builder.Prompts.text(session,"nationalityPlease");
+                }
+                else{
+                    session.endDialog();
+                }
+            },
+            function(session,results){ 
+                session.conversationData.nationality = results.response;
+                session.endDialog();
             }
         ]);
 
@@ -839,19 +914,62 @@ var program = {
                         .catch(function (error){
                             session.send(JSON.stringify( error));
                         });
-
-                        /*if("CRM" == "CRM")
-                            session.endDialogWithResult(results);
-                        else
-                        {
-                            session.dialogData.email = results.response;
-                            session.beginDialog("CollectDataCRM"); 
-                        }*/
                     }
                 else
                     session.replaceDialog('getEmail', { reprompt: true });
             }
         ]);
+        bot.dialog("getEmailCRMLead",[
+            function(session,args){
+                if (args && args.reprompt) {
+                        builder.Prompts.text(session, "validEmail");
+                } else {
+                    if (args.isRegistered)
+                        builder.Prompts.text(session, "enterEmailCRM");
+                    else if(!args.isRegistered)
+                        builder.Prompts.text(session, "enterEmailNoCRM");
+                    else
+                        builder.Prompts.text(session, "enterEmail");
+                }
+            },
+            function(session,results)
+            {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                if(re.test(results.response))
+                    {
+                        session.conversationData.email = results.response;
+                        dynamicsWebApi.retrieveAll("leads", ["emailaddress1","firstname", "mobilephone"], "statecode eq 0").then(function (response) {
+                            var records = response.value;
+                            if(JSON.stringify(records).toLowerCase().indexOf(results.response.toLowerCase()) > 0 )
+                            {
+                                for (var i = 0; i < records.length; i++) {
+                                    var element = records[i];
+                                    if (element.emailaddress1 != null && element.emailaddress1.toLowerCase() == results.response.toLowerCase()) {
+                                        session.CRMResult = true;
+                                        session.conversationData.isRegistered = true;
+                                        session.conversationData.firstName = element.firstname;
+                                        session.conversationData.mobile = element.mobilephone;
+                                        break;
+                                    }
+                                }
+                                session.endDialogWithResult(results);
+                            }
+                            else
+                            {
+                                session.endDialogWithResult(results);
+                                // session.dialogData.email = results.response;
+                                // session.beginDialog("CollectDataCRM",{Email:results.response}); 
+                            }
+                        })
+                        .catch(function (error){
+                            session.send(JSON.stringify( error));
+                        });
+                    }
+                else
+                    session.replaceDialog('getEmail', { reprompt: true });
+            }
+        ]);
+
         bot.dialog("CollectDataCRM",[
             function(session,args){
                 session.dialogData.email = args.Email;
@@ -869,7 +987,6 @@ var program = {
                 session.dialogData.mobile = results.response;
                 dynamicsWebApi.retrieveAll("leads", ["emailaddress1"], "statecode eq 0").then(function (response) {
                     var records = response.value;
-                    // session.send(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()));
                     if(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()) < 0 )
                     {
                         var lead = {
@@ -912,22 +1029,7 @@ var program = {
                     session.replaceDialog('getMobile', { reprompt: true });
             }
         ]);
-        bot.dialog("wantToInvest",[
-            function(session,results){
-                builder.Prompts.choice(session, "maybeinInvestor",program.Constants.YesNo[session.preferredLocale()],{listStyle: builder.ListStyle.button});
-            },
-            function(session,results){
-                var result = results.response.index;
-                if(result == 0){
-                    session.replaceDialog("invest");
-                }
-                else{
-                    session.send("thanks");
-                    session.conversationData.applicationSubmitted = true;
-                    session.endDialog();
-                }
-            }
-        ]);
+        
         bot.dialog("manualHelp",[
             function(session){
                 
@@ -949,24 +1051,23 @@ var program = {
                 }
             }])
         bot.dialog("setLanguage",[
-            function(session){
-                if(session.conversationData.lang == null)
-                {
-                    builder.Prompts.choice(session, "selectYourLanguage",program.Options.Languages,{listStyle: builder.ListStyle.button});
-                }else{
-                    session.endDialog();
-                }
+            function(session, args){
+                // session.send(JSON.stringify(args));
+                session.dialogData.startOption = args.startOption;
+                builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
                var locale = program.Helpers.GetLocal(results.response.index);
                session.conversationData.lang = locale;
                session.preferredLocale(locale,function(err){
                    if(!err){
-                      session.send("welcome");
-                      session.endDialog();
-                   }
+                        if(session.dialogData.startOption == "creditcard")
+                            session.replaceDialog("CreditCardStart");
+                        if(session.dialogData.startOption == "loan")
+                            session.replaceDialog("LoanStart");
+                        
+                }
                });
-               
             }
         ]);
         bot.dialog("Services",[
@@ -981,17 +1082,17 @@ var program = {
                 }
                 else if(results.response.index == 1)
                 {
-                    session.send("This section still under development");
+                    session.send("This section still under development 1");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 2)
                 {
-                    session.send("This section still under development");
+                    session.send("This section still under development 2");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 3)
                 {
-                    session.send("This section still under development");
+                    session.send("This section still under development 3");
                     session.replaceDialog("Services");
                 }
             }
@@ -1000,7 +1101,7 @@ var program = {
         bot.dialog("PersonalBanking",[
             function(session){
                 var personalBankingServicesList = program.Helpers.GetOptions(program.Options.PersonalBankingServices,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", personalBankingServicesList,{listStyle: builder.ListStyle.button});
+                builder.Prompts.choice(session, "getServicesDynamic", personalBankingServicesList,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
                 if (results.response.index == 0) {
@@ -1013,34 +1114,99 @@ var program = {
                 }
                 else if(results.response.index == 2)
                 {
-                    session.send("This section still under development");
+                    session.send("This section still under development 5");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 3)
                 {
-                    session.send("This section still under development");
                     session.replaceDialog("Services");
                 }
             }
         ]);
         
         bot.dialog("CreditCard",[
-            function(session){
+            function(session, args){
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServices,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
                 if (results.response.index == 0) {
                    //credit cards hero cards
-                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "CreditCardOptions" , NoOption:"CreditCard" , YesOption:"CollectInformation" });
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
                 }
                 else if(results.response.index == 1)
                 {
                     session.send("whichService");
                     session.endDialog();
                 }
+                else if(results.response.index == 2)
+                {
+                    session.replaceDialog("PersonalBanking");
+                }
             }
         ]);
+``
+        bot.dialog("CreditCardStart",[
+            function(session){
+                // session.send("%s",session.conversationData.lang);
+                session.send("CreditCardStarttext");
+                if(session.conversationData.lang == null)
+                {
+                    var locale = program.Helpers.GetLocal(1);
+                    session.conversationData.lang = locale;
+                    session.preferredLocale(locale,function(err){
+                   if(!err){
+                        // session.send("welcomeText");
+                        // session.replaceDialog("ExistingUser");
+                    }
+                    })
+                }
+                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+                }
+                else if(results.response.index == 1)
+                    session.replaceDialog("ExistingUser");
+                else if(results.response.index == 2)
+                    session.replaceDialog("setLanguage", {startOption : "creditcard"});
+            }
+        ]);
+
+        bot.dialog("LoanStart",[
+            function(session){
+                // session.send("%s",session.conversationData.lang);
+                session.send("LoanStarttext");
+                if(session.conversationData.lang == null)
+                {
+                    var locale = program.Helpers.GetLocal(1);
+                    session.conversationData.lang = locale;
+                    session.preferredLocale(locale,function(err){
+                   if(!err){
+                        // session.send("welcomeText");
+                        // session.replaceDialog("ExistingUser");
+                    }
+                    })
+                }
+                var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
+                }
+                else if(results.response.index == 1)
+                    session.replaceDialog("ExistingUser");
+                else if(results.response.index == 2)
+                    session.replaceDialog("setLanguage", {startOption : "loan"});
+            }
+        ]);
+
+        
 
         bot.dialog("LoanOffers",[
             function(session){
@@ -1049,13 +1215,17 @@ var program = {
             },
             function(session,results){
                 if (results.response.index == 0) {
-                   //credit cards hero cards
-                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "CreditCardOptions" , NoOption:"CreditCard" , YesOption:"CollectInformation" });
+                   //Loan hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
                 }
                 else if(results.response.index == 1)
                 {
                     session.send("whichService");
                     session.endDialog();
+                }
+                else if(results.response.index == 2)
+                {
+                    session.replaceDialog("PersonalBanking");
                 }
             }
         ]);
@@ -1103,7 +1273,7 @@ var program = {
                 {
                     var msg = new builder.Message(session);
                     var PropertyInterests = program.Helpers.GetOptions(program.Options.PropertyInterest,session.preferredLocale());
-                    session.conversationData.InterestedProperty = item.Title;
+                    session.conversationData.InternetedProduct = item.Title;
                     // session.send(JSON.stringify(PropertyInterests))
                     msg.attachmentLayout(builder.AttachmentLayout.carousel);
                     msg.attachments([
@@ -1127,12 +1297,10 @@ var program = {
                 }
             },
              function(session,results){
-                if(results.response.index == 0)
+                if(results.response.index == 0) 
                     session.replaceDialog(session.dialogData.YesOption);
                 else if(results.response.index == 1)
-                {
                     session.replaceDialog(session.dialogData.NoOption);
-                }
                 else if(results.response.index == 2)
                     session.replaceDialog(session.dialogData.ShowAll, { DisplayOptions : session.dialogData.DisplayOptions, ShowAll: session.dialogData.ShowAll , NoOption:session.dialogData.NoOption , YesOption:session.dialogData.YesOption}); 
              }
@@ -1140,6 +1308,8 @@ var program = {
 
         /////////////////////////
 
+
+        
         bot.dialog("setLanguageWithPic",[
             function(session){
                 var msg = new builder.Message(session);
@@ -1147,7 +1317,7 @@ var program = {
                 var txt = session.localizer.gettext("en","selectYourLanguage");
                 msg.attachments([
                 new builder.HeroCard(session)
-                    .title("UDC")
+                    .title("Advance Bank")
                     .text(txt)
                     .images([builder.CardImage.create(session, "http://www.udcqatar.com/images/logo.png")])
                     .buttons([
@@ -1163,7 +1333,7 @@ var program = {
                session.conversationData.lang = locale;
                session.preferredLocale(locale,function(err){
                    if(!err){
-                        session.send("welcomeText");
+                        // session.send("welcomeText");
                         session.replaceDialog("ExistingUser");
                    }
                }
@@ -1205,8 +1375,6 @@ var program = {
                     session.send("Hi Mr. "+ session.conversationData.firstName);
                 
                 session.replaceDialog("Services");
-
-
             } 
         ])
     },
@@ -1269,6 +1437,8 @@ bot.on('conversationUpdate', function (activity) {
         activity.membersAdded.forEach((identity) => {
             if (identity.id === activity.address.bot.id) {
                    bot.beginDialog(activity.address, 'setLanguageWithPic');
+                //    bot.beginDialog(activity.address, 'CreditCardStart');
+                //    bot.beginDialog(activity.address, 'LoanStart');
              }
          });
     }

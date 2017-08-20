@@ -23,6 +23,7 @@
     "adal-node": "^0.1.22",
     "botbuilder": "^3.9.1",
     "botbuilder-cognitiveservices": "^1.1.0",
+    "dateformat": "^2.0.0",
     "dynamics-web-api": "^1.2.9",
     "express": "^4.15.4",
     "nodemailer": "^4.0.1",
