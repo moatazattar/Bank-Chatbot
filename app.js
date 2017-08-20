@@ -42,15 +42,25 @@ var connector = new builder.ChatConnector({
     appPassword:"vszZWtRjM7wbrXtmyBCu8EW"// process.env.MICROSOFT_APP_PASSWORD
 });
 
-
+var connectorCreditCard = new builder.ChatConnector({
+    appId:"11244d52-2ed6-46e8-a604-2d8e1b123a62",// process.env.MICROSOFT_APP_ID,
+    appPassword:"KRZUN2jpzt4ZvRR5q7sNwq9"// process.env.MICROSOFT_APP_PASSWORD
+});
 
 // Listen for messages from users 
+server.post('/api/creditcards/messages', connectorCreditCard.listen());
+
 server.post('/api/messages', connector.listen());
 
-var bot = new builder.UniversalBot(connector,{
+// var bot = new builder.UniversalBot(connector,{
+//     localizerSettings: { 
+//         defaultLocale: "en" 
+//     } 
+// });
+
+var bot = new builder.UniversalBot(connectorCreditCard,{
     localizerSettings: { 
         defaultLocale: "en" 
-        
     } 
 });
 
@@ -156,9 +166,7 @@ var intents = new builder.IntentDialog({ recognizers: [
         };
     })
 })
-// .matches('None',(session, args) => {
-//     session.send("cannotUnderstand");
-// })
+
 .onDefault((session) => {
     session.send('defaultIntent');
 });
