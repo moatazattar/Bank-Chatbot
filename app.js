@@ -120,7 +120,18 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 
 .matches('MainMenu',(session, args) => {
-    session.beginDialog("ExistingUser");  
+    if(session.conversationData.lang == null)
+    {
+        var locale ="en";
+        session.conversationData.lang = "en";
+        session.preferredLocale(locale,function(err){
+            if(!err){
+                session.replaceDialog("ExistingUser");
+            };
+        })
+    }
+    else
+        session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
     // session.send("%s",session.conversationData.lang);
@@ -1263,14 +1274,12 @@ var program = {
         //////////////////////////
             varBot.dialog("HeroCardsDialog",[
             function(session, args){
-                
-
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
                 session.dialogData.NoOption = args.NoOption;
                 session.dialogData.DisplayOptions = args.DisplayOptions;
 
-                var locale = session.conversationData.lang;
+                var locale = session.preferredLocale();
                 var result = program.Options.AvailableProperty[locale][args.DisplayOptions];
                 session.dialogData.item = result;
                 if(!result.Cards)
