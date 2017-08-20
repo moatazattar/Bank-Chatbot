@@ -576,26 +576,21 @@ var program = {
 
         bot.dialog("setLanguage",[
         function(session, args){
-            session.send(session.conversationData.lang);
+            // session.send(session.conversationData.lang);
             session.dialogData.startOption = args.startOption;
             builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
         },
         function(session,results){
             var locale = program.Helpers.GetLocal(results.response.index);
             session.conversationData.lang = locale;
-            session.send(locale);
             session.preferredLocale(locale,function(err){
-                if(!err){
-                    session.send(JSON.stringify(session.dialogData));
+                if(!err)
+                {
                     if(session.dialogData.startOption == "creditcard")
-                    {
-                        session.send(JSON.stringify(session.dialogData));
                         session.replaceDialog("StartCreditCard");
-                    }
                     if(session.dialogData.startOption == "loan")
                         session.beginDialog("LoanStart");
-                    
-            }
+                }       
             });
         }
     ]);
@@ -1134,17 +1129,20 @@ var program = {
 
         bot.dialog("StartCreditCard",[
             function(session, results){
-                session.conversationData.isCreditCardStart = results.isCreditCardStart;
-                session.send("CreditCardStarttext");
-                // if(session.conversationData.lang == null)
-                // {
-                //     var locale ="en";
-                //     session.conversationData.lang = "en";
-                //     session.preferredLocale(locale,function(err){
-                //         if(!err){
-                //         };
-                //     })
-                // }
+                if(results!= null && results.isCreditCardStart != null )
+                {
+                    session.conversationData.isCreditCardStart = results.isCreditCardStart;
+                    session.send("CreditCardStarttext");
+                    if(session.conversationData.lang == null)
+                    {
+                        var locale ="en";
+                        session.conversationData.lang = "en";
+                        session.preferredLocale(locale,function(err){
+                            if(!err){
+                            };
+                        })
+                    }
+                }
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
             },
@@ -1161,21 +1159,21 @@ var program = {
         ]);
 
         bot.dialog("LoanStart",[
-            function(session, args){
-                // session.send("%s",session.conversationData.lang);
-                session.conversationData.isCreditCardStart = args.isCreditCardStart;
-                session.send("LoanStarttext");
-                // if(session.conversationData.lang == null)
-                // {
-                //     var locale = program.Helpers.GetLocal(1);
-                //     session.conversationData.lang = locale;
-                //     session.preferredLocale(locale,function(err){
-                //    if(!err){
-                //         // session.send("welcomeText");
-                //         // session.replaceDialog("ExistingUser");
-                //     }
-                //     })
-                // }
+            function(session, results){
+                if(results!= null && results.isCreditCardStart != null )
+                {
+                    session.conversationData.isCreditCardStart = args.isCreditCardStart;
+                    session.send("LoanStarttext");
+                    if(session.conversationData.lang == null)
+                    {
+                        var locale = program.Helpers.GetLocal(1);
+                        session.conversationData.lang = locale;
+                        session.preferredLocale(locale,function(err){
+                    if(!err){
+                        }
+                        })
+                    }
+                }
                 var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
             },
