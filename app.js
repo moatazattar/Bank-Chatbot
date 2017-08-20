@@ -106,7 +106,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.replaceDialog("CreditCardStart");  
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.beginDialog("ExistingUser");  
+    session.beginDialog("CreditCard");  
     // session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
@@ -552,6 +552,32 @@ var program = {
     },
     RegisterDialogs : function(){
 
+        bot.dialog("setLanguage",[
+        function(session, args){
+            session.send(session.conversationData.lang);
+            session.dialogData.startOption = args.startOption;
+            builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
+        },
+        function(session,results){
+            var locale = program.Helpers.GetLocal(results.response.index);
+            session.conversationData.lang = locale;
+            session.send(locale);
+            session.preferredLocale(locale,function(err){
+                if(!err){
+                    session.send(JSON.stringify(session.dialogData));
+                    if(session.dialogData.startOption == "creditcard")
+                    {
+                        session.send(JSON.stringify(session.dialogData));
+                        session.replaceDialog("CreditCardStart");
+                    }
+                    if(session.dialogData.startOption == "loan")
+                        session.replaceDialog("LoanStart");
+                    
+            }
+            });
+        }
+    ]);
+
         bot.dialog("ExistingUser",[
             function(session,results){
                 if(session.conversationData.isRegistered)
@@ -792,6 +818,7 @@ var program = {
                 session.endDialog();
             }
         ]);
+
         bot.dialog("getFirstname",[
             function(session){ //get fisrt name
                 if(session.conversationData.firstName == null){
@@ -806,6 +833,7 @@ var program = {
                 session.endDialog();
             }
         ]);
+
         bot.dialog("getLastname",[
             function(session){ //get last name
                 if(session.conversationData.lastName == null){
@@ -820,6 +848,7 @@ var program = {
                 session.endDialog();
             }
         ]);
+
         bot.dialog("getEmail",[
             function(session,args){
                 if (args && args.reprompt) {
@@ -837,6 +866,7 @@ var program = {
                     session.replaceDialog('getEmail', { reprompt: true });
             }
         ]);
+
         bot.dialog("getEmailCRM",[
             function(session,args){
                 if (args && args.reprompt) {
@@ -886,6 +916,7 @@ var program = {
                     session.replaceDialog('getEmail', { reprompt: true });
             }
         ]);
+        
         bot.dialog("getEmailCRMLead",[
             function(session,args){
                 if (args && args.reprompt) {
@@ -979,6 +1010,7 @@ var program = {
                 });
             }
         ]);
+        
         bot.dialog("getMobile",[
             function(session,args){
                 if (args && args.reprompt) {
@@ -1016,33 +1048,12 @@ var program = {
                 if(index == 2){
                     session.replaceDialog("invest");
                 }
-            }])
+            }]);
 
-        bot.dialog("setLanguage",[
-            function(session, args){
-                session.send(session.conversationData.lang);
-                session.dialogData.startOption = args.startOption;
-                builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
-            },
-            function(session,results){
-                var locale = program.Helpers.GetLocal(results.response.index);
-                session.conversationData.lang = locale;
-                session.send(locale);
-                session.preferredLocale(locale,function(err){
-                    if(!err){
-                        session.send(JSON.stringify(session.dialogData));
-                        if(session.dialogData.startOption == "creditcard")
-                        {
-                            session.send(JSON.stringify(session.dialogData));
-                            session.replaceDialog("CreditCardStart");
-                        }
-                        if(session.dialogData.startOption == "loan")
-                            session.replaceDialog("LoanStart");
-                        
-                }
-                });
-            }
-        ]);
+     
+        
+
+
         bot.dialog("Services",[
             function(session){
                 var ServicesList = program.Helpers.GetOptions(program.Options.Services,session.preferredLocale());
@@ -1177,8 +1188,6 @@ var program = {
                     session.replaceDialog("setLanguage", {startOption : "loan"});
             }
         ]);
-
-        
 
         bot.dialog("LoanOffers",[
             function(session){
