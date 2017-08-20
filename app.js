@@ -106,7 +106,8 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.replaceDialog("CreditCardStart");  
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.beginDialog("LoanStart");  
+    session.beginDialog("ExistingUser");  
+    // session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
     session.send("%s", session.conversationData.isCreditCardStart)
