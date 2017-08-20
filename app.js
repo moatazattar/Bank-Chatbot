@@ -106,7 +106,8 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.replaceDialog("StartCreditCard");  
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.beginDialog("StartCreditCard");  
+    session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
+    // session.beginDialog("StartCreditCard");  
     // session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
@@ -576,17 +577,17 @@ var program = {
 
         bot.dialog("StartCreditCard",[
             function(session, results){
-                // session.conversationData.isCreditCardStart = results.isCreditCardStart;
-                // session.send("CreditCardStarttext");
-                // if(session.conversationData.lang == null)
-                // {
-                //     var locale ="en";
-                //     session.conversationData.lang = "en";
-                //     session.preferredLocale(locale,function(err){
-                //         if(!err){
-                //         };
-                //     })
-                // }
+                session.conversationData.isCreditCardStart = results.isCreditCardStart;
+                session.send("CreditCardStarttext");
+                if(session.conversationData.lang == null)
+                {
+                    var locale ="en";
+                    session.conversationData.lang = "en";
+                    session.preferredLocale(locale,function(err){
+                        if(!err){
+                        };
+                    })
+                }
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
             },
