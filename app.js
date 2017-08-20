@@ -139,7 +139,8 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 .matches('LoanStartRecog',(session, args) => {
     // session.send("Loan");
-    // session.send("%s",session.conversationData.lang);
+    session.send("%s",session.conversationData.lang);
+    session.send("%s",session.preferredLocale());
     session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
 })
 .matches('EnglishArabic',(session, args) => {
