@@ -103,10 +103,10 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 .matches('CreditCardStartRecog',(session, args) => {
     // session.send("welcomeText");
-    session.replaceDialog("CreditCardStart");  
+    session.replaceDialog("StartCreditCard");  
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.beginDialog("CreditCard");  
+    session.beginDialog("StartCreditCard");  
     // session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
@@ -552,6 +552,34 @@ var program = {
     },
     RegisterDialogs : function(){
 
+        bot.dialog("StartCreditCard",[
+            function(session, results){
+                session.conversationData.isCreditCardStart = results.isCreditCardStart;
+                session.send("CreditCardStarttext");
+                if(session.conversationData.lang == null)
+                {
+                    var locale ="en";
+                    session.conversationData.lang = "en";
+                    session.preferredLocale(locale,function(err){
+                        if(!err){
+                        };
+                    })
+                }
+                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+                }
+                else if(results.response.index == 1)
+                    session.replaceDialog("ExistingUser");
+                else if(results.response.index == 2)
+                    session.replaceDialog("setLanguage", {startOption : "creditcard"});
+            }
+        ]);
+
         bot.dialog("setLanguage",[
         function(session, args){
             session.send(session.conversationData.lang);
@@ -568,7 +596,7 @@ var program = {
                     if(session.dialogData.startOption == "creditcard")
                     {
                         session.send(JSON.stringify(session.dialogData));
-                        session.replaceDialog("CreditCardStart");
+                        session.replaceDialog("StartCreditCard");
                     }
                     if(session.dialogData.startOption == "loan")
                         session.replaceDialog("LoanStart");
@@ -1130,33 +1158,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("CreditCardStart",[
-            function(session, results){
-                session.conversationData.isCreditCardStart = results.isCreditCardStart;
-                session.send("CreditCardStarttext");
-                if(session.conversationData.lang == null)
-                {
-                    var locale ="en";
-                    session.conversationData.lang = "en";
-                    session.preferredLocale(locale,function(err){
-                        if(!err){
-                        };
-                    })
-                }
-                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
-            },
-            function(session,results){
-                if (results.response.index == 0) {
-                   //credit cards hero cards
-                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
-                }
-                else if(results.response.index == 1)
-                    session.replaceDialog("ExistingUser");
-                else if(results.response.index == 2)
-                    session.replaceDialog("setLanguage", {startOption : "creditcard"});
-            }
-        ]);
+        
 
         bot.dialog("LoanStart",[
             function(session, args){
