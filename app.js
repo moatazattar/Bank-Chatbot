@@ -124,11 +124,11 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
-    session.send("Credit Card");
+    // session.send("Credit Card");
     session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.send("Loan");
+    // session.send("Loan");
     session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
 })
 .matches('EnglishArabic',(session, args) => {
@@ -623,6 +623,15 @@ var program = {
 
         varBot.dialog("ExistingUser",[
             function(session,results){
+                if(session.conversationData.locale == null)
+                {
+                    var locale ="en";
+                    session.conversationData.lang = "en";
+                    session.preferredLocale(locale,function(err){
+                        if(!err){
+                        };
+                    })
+                }
                 if(session.conversationData.isRegistered)
                     session.replaceDialog("Services");
                 else
@@ -1240,8 +1249,17 @@ var program = {
         //////////////////////////
             varBot.dialog("HeroCardsDialog",[
             function(session, args){
-                session.send(JSON.stringify(args));
                 
+                if(session.conversationData.locale == null)
+                {
+                    var locale ="en";
+                    session.conversationData.lang = "en";
+                    session.preferredLocale(locale,function(err){
+                        if(!err){
+                        };
+                    })
+                }
+
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
                 session.dialogData.NoOption = args.NoOption;
