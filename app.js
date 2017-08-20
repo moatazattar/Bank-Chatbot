@@ -1438,7 +1438,7 @@ bot.on('conversationUpdate', function (activity) {
     if (activity.membersAdded) {
         activity.membersAdded.forEach((identity) => {
             if (identity.id === activity.address.bot.id) {
-                    botCreditCard.beginDialog(activity.address, 'StartCreditCard',{isCreditCardStart : false});
+                    botCreditCard.beginDialog(activity.address, 'StartCreditCard',{isCreditCardStart : true});
              }
          });
     }
