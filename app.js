@@ -1240,6 +1240,8 @@ var program = {
         //////////////////////////
             varBot.dialog("HeroCardsDialog",[
             function(session, args){
+                session.send(JSON.stringify(args));
+                
                 session.dialogData.ShowAll = args.ShowAll;
                 session.dialogData.YesOption = args.YesOption;
                 session.dialogData.NoOption = args.NoOption;
