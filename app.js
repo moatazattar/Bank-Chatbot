@@ -1160,9 +1160,9 @@ var program = {
 
         bot.dialog("LoanStart",[
             function(session, results){
-                if(results!= null && results.isCreditCardStart != null )
+                if(results != null && results.isCreditCardStart != null )
                 {
-                    session.conversationData.isCreditCardStart = args.isCreditCardStart;
+                    session.conversationData.isCreditCardStart = results.isCreditCardStart;
                     session.send("LoanStarttext");
                     if(session.conversationData.lang == null)
                     {
