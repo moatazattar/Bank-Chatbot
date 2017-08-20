@@ -123,7 +123,8 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
-    // session.send("Credit Card");
+    session.send("%s",session.conversationData.lang);
+    
     if(session.conversationData.lang == null)
     {
         var locale ="en";
@@ -137,6 +138,7 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 .matches('LoanStartRecog',(session, args) => {
     // session.send("Loan");
+    session.send("%s",session.conversationData.lang);
     if(session.conversationData.lang == null)
     {
         var locale ="en";
@@ -643,15 +645,6 @@ var program = {
 
         varBot.dialog("ExistingUser",[
             function(session,results){
-                if(session.conversationData.lang == null)
-                {
-                    var locale ="en";
-                    session.conversationData.lang = "en";
-                    session.preferredLocale(locale,function(err){
-                        if(!err){
-                        };
-                    })
-                }
                 if(session.conversationData.isRegistered)
                     session.replaceDialog("Services");
                 else
