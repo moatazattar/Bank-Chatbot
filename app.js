@@ -1071,9 +1071,12 @@ var program = {
             function(session,results){
                 session.send(JSON.stringify(results));
                 var locale = program.Helpers.GetLocal(results.response.index);
+                session.send(JSON.stringify(results));
                 session.conversationData.lang = locale;
                 session.preferredLocale(locale,function(err){
                     if(!err){
+                session.send(JSON.stringify(results));
+                session.send(JSON.stringify(session.dialogData));
                         if(session.dialogData.startOption == "creditcard")
                             session.replaceDialog("CreditCardStart");
                         if(session.dialogData.startOption == "loan")
