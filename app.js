@@ -127,6 +127,8 @@ var intents = new builder.IntentDialog({ recognizers: [
     EnglishRecognizers.arabicRecognizer,
     EnglishRecognizers.englishRecognizer,
     EnglishRecognizers.ChangeLanguageRecognizer,
+    EnglishRecognizers.CreditCardStartRecognizer,
+    EnglishRecognizers.LoanStartRecognizer,
     ] 
 })
 
@@ -179,7 +181,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     }
 ])
 .matches('English',(session, args) => {
-    // session.send('English');
+    session.send('English');
     var locale ="en";
     session.conversationData.lang = "en";
     session.preferredLocale(locale,function(err){
@@ -190,7 +192,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     })
 })
 .matches('Arabic',(session, args) => {
-    // session.send('Arabic');
+    session.send('Arabic');
     var locale ="ar";
     session.conversationData.lang = locale;
     session.preferredLocale(locale,function(err){
@@ -1059,6 +1061,7 @@ var program = {
                     session.replaceDialog("invest");
                 }
             }])
+
         bot.dialog("setLanguage",[
             function(session, args){
                 session.send(JSON.stringify(args));
