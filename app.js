@@ -623,7 +623,7 @@ var program = {
 
         varBot.dialog("ExistingUser",[
             function(session,results){
-                if(session.conversationData.locale == null)
+                if(session.conversationData.lang == null)
                 {
                     var locale ="en";
                     session.conversationData.lang = "en";
@@ -1250,7 +1250,7 @@ var program = {
             varBot.dialog("HeroCardsDialog",[
             function(session, args){
                 
-                if(session.conversationData.locale == null)
+                if(session.conversationData.lang == null)
                 {
                     var locale ="en";
                     session.conversationData.lang = "en";
