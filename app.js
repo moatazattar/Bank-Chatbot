@@ -102,13 +102,10 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("ExistingUser");  
 })
 .matches('CreditCardStartRecog',(session, args) => {
-    // session.send("welcomeText");
-    session.replaceDialog("StartCreditCard");  
+    session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
 })
 .matches('LoanStartRecog',(session, args) => {
     session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
-    // session.beginDialog("StartCreditCard");  
-    // session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
     session.send("%s", session.conversationData.isCreditCardStart)
@@ -575,33 +572,7 @@ var program = {
             }
         ]);
 
-        bot.dialog("StartCreditCard",[
-            function(session, results){
-                session.conversationData.isCreditCardStart = results.isCreditCardStart;
-                session.send("CreditCardStarttext");
-                if(session.conversationData.lang == null)
-                {
-                    var locale ="en";
-                    session.conversationData.lang = "en";
-                    session.preferredLocale(locale,function(err){
-                        if(!err){
-                        };
-                    })
-                }
-                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
-            },
-            function(session,results){
-                if (results.response.index == 0) {
-                   //credit cards hero cards
-                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
-                }
-                else if(results.response.index == 1)
-                    session.replaceDialog("ExistingUser");
-                else if(results.response.index == 2)
-                    session.replaceDialog("setLanguage", {startOption : "creditcard"});
-            }
-        ]);
+        
 
         bot.dialog("setLanguage",[
         function(session, args){
@@ -1161,24 +1132,50 @@ var program = {
         
         
 
-        
+        bot.dialog("StartCreditCard",[
+            function(session, results){
+                session.conversationData.isCreditCardStart = results.isCreditCardStart;
+                session.send("CreditCardStarttext");
+                // if(session.conversationData.lang == null)
+                // {
+                //     var locale ="en";
+                //     session.conversationData.lang = "en";
+                //     session.preferredLocale(locale,function(err){
+                //         if(!err){
+                //         };
+                //     })
+                // }
+                var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
+                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if (results.response.index == 0) {
+                   //credit cards hero cards
+                   session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+                }
+                else if(results.response.index == 1)
+                    session.replaceDialog("ExistingUser");
+                else if(results.response.index == 2)
+                    session.replaceDialog("setLanguage", {startOption : "creditcard"});
+            }
+        ]);
 
         bot.dialog("LoanStart",[
             function(session, args){
                 // session.send("%s",session.conversationData.lang);
                 session.conversationData.isCreditCardStart = args.isCreditCardStart;
                 session.send("LoanStarttext");
-                if(session.conversationData.lang == null)
-                {
-                    var locale = program.Helpers.GetLocal(1);
-                    session.conversationData.lang = locale;
-                    session.preferredLocale(locale,function(err){
-                   if(!err){
-                        // session.send("welcomeText");
-                        // session.replaceDialog("ExistingUser");
-                    }
-                    })
-                }
+                // if(session.conversationData.lang == null)
+                // {
+                //     var locale = program.Helpers.GetLocal(1);
+                //     session.conversationData.lang = locale;
+                //     session.preferredLocale(locale,function(err){
+                //    if(!err){
+                //         // session.send("welcomeText");
+                //         // session.replaceDialog("ExistingUser");
+                //     }
+                //     })
+                // }
                 var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
                 builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
             },
