@@ -113,8 +113,8 @@ var EnglishRecognizers = {
         arabicRecognizer : new builder.RegExpRecognizer( "Arabic", /(العربية)/i), 
         englishRecognizer : new builder.RegExpRecognizer( "English", /(English)/i),
         ChangeLanguageRecognizer : new builder.RegExpRecognizer( "EnglishArabic", /(Change Language | تغيير اللغه)/i),
-        CreditCardStartRecognizer : new builder.RegExpRecognizer( "CreditCardStart", /(View all available Credit Card Offers|عرض بطاقات الإئتمان المتاحه)/i),
-        LoanStartRecognizer : new builder.RegExpRecognizer( "LoanStart", /(View all available Loans|عرض القروض المتاحه)/i)
+        CreditCardStartRecognizer : new builder.RegExpRecognizer( "CreditCardStartRecog", /(View all available Credit Card Offers|عرض بطاقات الإئتمان المتاحه)/i),
+        LoanStartRecognizer : new builder.RegExpRecognizer( "LoanStartRecog", /(View all available Loans|عرض القروض المتاحه)/i)
     }
 
 
@@ -145,10 +145,10 @@ var intents = new builder.IntentDialog({ recognizers: [
     // session.send("welcomeTextinmiddle");
     session.beginDialog("ExistingUser");  
 })
-.matches('CreditCardStart',(session, args) => {
+.matches('CreditCardStartRecog',(session, args) => {
     session.beginDialog("CreditCardStart");  
 })
-.matches('LoanStart',(session, args) => {
+.matches('LoanStartRecog',(session, args) => {
     session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
@@ -1155,8 +1155,8 @@ var program = {
         ]);
 ``
         bot.dialog("CreditCardStart",[
-            function(session){
-                // session.send("%s",session.conversationData.lang);
+            function(session, args){
+                session.conversationData.isCreditCardStart = args.isCreditCardStart;
                 session.send("CreditCardStarttext");
                 if(session.conversationData.lang == null)
                 {
@@ -1185,8 +1185,9 @@ var program = {
         ]);
 
         bot.dialog("LoanStart",[
-            function(session){
+            function(session, args){
                 // session.send("%s",session.conversationData.lang);
+                session.conversationData.isCreditCardStart = args.isCreditCardStart;
                 session.send("LoanStarttext");
                 if(session.conversationData.lang == null)
                 {
@@ -1445,8 +1446,8 @@ bot.on('conversationUpdate', function (activity) {
         activity.membersAdded.forEach((identity) => {
             if (identity.id === activity.address.bot.id) {
                 //    bot.beginDialog(activity.address, 'setLanguageWithPic');
-                    session.conversationData.isCreditCardStart = true;
-                    bot.beginDialog(activity.address, 'CreditCardStart');
+                    // session.conversationData.isCreditCardStart = true;
+                    bot.beginDialog(activity.address, 'CreditCardStart',{isCreditCardStart : true});
                 //    bot.beginDialog(activity.address, 'LoanStart');
              }
          });
