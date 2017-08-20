@@ -120,28 +120,37 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 
 .matches('MainMenu',(session, args) => {
-    if(session.conversationData.lang == null)
-    {
-        var locale ="en";
-        session.conversationData.lang = "en";
-        session.preferredLocale(locale,function(err){
-            if(!err){
-                session.replaceDialog("ExistingUser");
-            };
-        })
-    }
-    else
-        session.beginDialog("ExistingUser");  
+     var locale =session.conversationData.lang;
+    session.conversationData.lang = "en";
+    session.preferredLocale(locale,function(err){
+        if(!err){
+            session.beginDialog("ExistingUser");  
+        };
+    })
 })
 .matches('CreditCardStartRecog',(session, args) => {
     // session.send("%s",session.conversationData.lang);
-    session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+    var locale =session.conversationData.lang;
+    session.preferredLocale(locale,function(err){
+        if(!err){
+            // session.send("welcomeText");
+            session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Credit Cards", ShowAll: "HeroCardsDialog" , NoOption:"CreditCard" , YesOption:"CollectInformationCRM" });
+        };
+    })
 })
 .matches('LoanStartRecog',(session, args) => {
     // session.send("Loan");
-    session.send("%s",session.conversationData.lang);
-    session.send("%s",session.preferredLocale());
-    session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
+    // session.send("%s",session.conversationData.lang);
+    // session.send("%s",session.preferredLocale());
+    var locale =session.conversationData.lang;
+    session.conversationData.lang = "en";
+    session.preferredLocale(locale,function(err){
+        if(!err){
+            // session.send("welcomeText");
+            session.beginDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
+        };
+    })
+    
 })
 .matches('EnglishArabic',(session, args) => {
     // session.send("%s", session.conversationData.isCreditCardStart)
