@@ -1169,21 +1169,18 @@ var program = {
 
         varBot.dialog("StartCreditCard",[
             function(session, results){
-                var locale = program.Helpers.GetLocal("1");
-               session.conversationData.lang = locale;
-               session.preferredLocale(locale,function(err){
-                   if(!err){
-                        // session.send("welcomeText");
-                       if(results!= null && results.isCreditCardStart != null )
+                if(results!= null && results.isCreditCardStart != null )
                 {
                     session.conversationData.isCreditCardStart = results.isCreditCardStart;
                     session.send("CreditCardStarttext");
+                    session.send("%s",session.conversationData.lang);
                     if(session.conversationData.lang == null)
                     {
                         var locale ="en";
                         session.conversationData.lang = "en";
                         session.preferredLocale(locale,function(err){
                             if(!err){
+                                session.send("%s",session.conversationData.lang);
                                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
                                 builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                             };
@@ -1200,11 +1197,6 @@ var program = {
                     var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
                     builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                 }
-                   }
-               }
-            );
-
-                
             },
             function(session,results){
                 if (results.response.index == 0) {
