@@ -152,6 +152,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
+    session.send("%s", session.conversationData.isCreditCardStart)
     if(session.conversationData.isCreditCardStart)
         session.beginDialog("setLanguage", {startOption : "creditcard"});
     else
@@ -1060,7 +1061,7 @@ var program = {
             }])
         bot.dialog("setLanguage",[
             function(session, args){
-                // session.send(JSON.stringify(args));
+                session.send(JSON.stringify(args));
                 session.dialogData.startOption = args.startOption;
                 builder.Prompts.choice(session, "selectYourLanguageStart",program.Options.LanguageListStart,{listStyle: builder.ListStyle.button});
             },
