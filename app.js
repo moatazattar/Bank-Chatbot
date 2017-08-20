@@ -108,7 +108,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.replaceDialog("HeroCardsDialog", { DisplayOptions : "Available Loan Options", ShowAll: "HeroCardsDialog" , NoOption:"LoanOffers" , YesOption:"CollectInformationCRM" });
 })
 .matches('EnglishArabic',(session, args) => {
-    session.send("%s", session.conversationData.isCreditCardStart)
+    // session.send("%s", session.conversationData.isCreditCardStart)
     if(session.conversationData.isCreditCardStart)
         session.beginDialog("setLanguage", {startOption : "creditcard"});
     else
@@ -1419,7 +1419,8 @@ bot.on('conversationUpdate', function (activity) {
             if (identity.id === activity.address.bot.id) {
                 //    bot.beginDialog(activity.address, 'setLanguageWithPic');
                     // session.conversationData.isCreditCardStart = true;
-                    bot.beginDialog(activity.address, 'LoanStart',{isCreditCardStart : false});
+                    bot.beginDialog(activity.address, 'StartCreditCard',{isCreditCardStart : false});
+                    // bot.beginDialog(activity.address, 'LoanStart',{isCreditCardStart : false});
                 //    bot.beginDialog(activity.address, 'LoanStart');
              }
          });
