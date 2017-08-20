@@ -106,7 +106,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.replaceDialog("CreditCardStart");  
 })
 .matches('LoanStartRecog',(session, args) => {
-    session.replaceDialog("LoanStart");  
+    session.beginDialog("LoanStart");  
 })
 .matches('EnglishArabic',(session, args) => {
     session.send("%s", session.conversationData.isCreditCardStart)
@@ -1409,7 +1409,7 @@ bot.on('conversationUpdate', function (activity) {
             if (identity.id === activity.address.bot.id) {
                 //    bot.beginDialog(activity.address, 'setLanguageWithPic');
                     // session.conversationData.isCreditCardStart = true;
-                    bot.beginDialog(activity.address, 'CreditCardStart',{isCreditCardStart : true});
+                    bot.beginDialog(activity.address, 'LoanStart',{isCreditCardStart : false});
                 //    bot.beginDialog(activity.address, 'LoanStart');
              }
          });
