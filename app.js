@@ -623,19 +623,26 @@ var program = {
 
         varBot.dialog("ExistingUser",[
             function(session,results){
+                session.send("2");
                 if(session.conversationData.lang == null)
                 {
+                session.send("2");
                     var locale ="en";
                     session.conversationData.lang = "en";
                     session.preferredLocale(locale,function(err){
                         if(!err){
+                session.send("3");
+                            
                         };
                     })
                 }
+                session.send("4");
                 if(session.conversationData.isRegistered)
                     session.replaceDialog("Services");
                 else
                 {                    
+                session.send("5");
+                session.send("%s", session.preferredLocale());
                     var AlreadyUserOptions = program.Helpers.GetOptions(program.Options.AlreadyUser,session.preferredLocale());
                     builder.Prompts.choice(session, "areYouMemeber", AlreadyUserOptions,{listStyle: builder.ListStyle.button});
                 }
