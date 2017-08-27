@@ -1373,7 +1373,7 @@ var program = {
                 new builder.HeroCard(session)
                     .title("Advance Bank")
                     .text(txt)
-                    .images([builder.CardImage.create(session, "http://www.udcqatar.com/images/logo.png")])
+                    .images([builder.CardImage.create(session, "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/AdvancyaBankLogo.png")])
                     .buttons([
                         builder.CardAction.imBack(session, "English", "English"),
                         builder.CardAction.imBack(session, "العربية", "العربية"),
