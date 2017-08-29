@@ -124,7 +124,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.conversationData.lang = "en";
     session.preferredLocale(locale,function(err){
         if(!err){
-            session.beginDialog("ExistingUser");  
+            session.beginDialog("PersonalBanking");  
         };
     })
 })
@@ -206,19 +206,32 @@ var intents = new builder.IntentDialog({ recognizers: [
 })
 
 .onDefault((session) => {
-    session.send('defaultIntent');
+    
+    if (session.conversationData.dontUnderstandCount == null) {
+        session.conversationData.dontUnderstandCount = 1;
+    }
+
+    if (session.conversationData.dontUnderstandCount == 4)
+        session.replaceDialog("DontUnderstand");
+    else
+    {
+        session.conversationData.dontUnderstandCount++;
+        session.send('defaultIntent');
+    }
 });
+
+
 var program = {
     Constants:{
         questionsBeforeInvest : 5,
         questionBeforeGenericHelp : 3,
         EmailTemplate : {
             Content:{
-                en:"Dear {{user}} <br/> Thanks alot for your interest in Advance Bank, our team will study your inquiry and will get back to you as soon as possible <br/><table border=1><tr><td>Mobile</td><td>{{mobile}}</td></tr><tr><td>property</td><td>{{property}}</td></tr><tr><td>Comment</td><td>{{comment}}</td></tr></table><br/>Regards,<br/>Advance Bank Team",
+                en:"Dear {{user}} <br/> i. Thanks alot for your interest in AdvancaBank, our team will study your inquiry and will get back to you as soon as possible <br/><table border=1><tr><td>Mobile</td><td>{{mobile}}</td></tr><tr><td>property</td><td>{{property}}</td></tr><tr><td>Comment</td><td>{{comment}}</td></tr></table><br/>Regards,<br/>AdvancaBank Team",
                 ar:"<div style='direction:rtl'> عزيزي {{user}} <br/> شكراً على اهتمامك بعقارات الشركه المتحده، سوف نقوم بدراسة طلبك والرد عليك بأقرب فرصة ممكنة <br/><br/><table border=1><tr><td>رقم جوالك</td><td>{{mobile}}</td></tr><tr><td>اهتماماتك</td><td>{{property}}</td></tr><tr><td>الاستعلام عنه</td><td>{{comment}}</td></tr></table><br/> مع تحيات فريق عمل الشركه المتحده</div>"
             },
             Subject:{
-                en:"Thanks from Advance Bank",
+                en:"Thank you for contacting AdvancaBank",
                 ar:"شكراً من الشركه المتحده"
             }
         },
@@ -274,11 +287,23 @@ var program = {
                "محاوله مره أخري":{Description:"محاوله مره أخري"},
             }
         },
+        DontUnderstand:{
+            en:{
+                "Call Us":{Description:"Call Us"},
+                "Visit Us":{Description:"Visit Us"},
+                "Main Menu":{Description:"Main Menu"},
+            },
+            ar:{
+               "أتصل بنا":{Description:"أتصل بنا"},
+               "قم بزيارتنا":{Description:"قم بزيارتنا"},
+               "محاوله مره أخري":{Description:"محاوله مره أخري"},
+            }
+        },
         ArabicNotYet:{
             en:{
                 "Call Us":{Description:"Call Us"},
                 "Visit Us":{Description:"Visit Us"},
-                "Back to English":{Description:"Back to English"},
+                "Back to Main Menu":{Description:"Back to Main Menu"},
             },
             ar:{
                "أتصل بنا":{Description:"أتصل بنا"},
@@ -299,8 +324,8 @@ var program = {
         PropertyInterest:{
             en:{
                "More Info":{Description:"Yes"},
-                "No":{Description:"No"},
-                "Show All":{Description:"Show All"}
+                "Show All":{Description:"Show All"},
+                "Back":{Description:"Back"}
             },
             ar:{
                 "المزيد":{Description:"نعم"},
@@ -325,7 +350,7 @@ var program = {
         CreditCardServices:{
             en:{
                 "View all available Credit Card Offers":{Description:"View all available Credit Card Offers"},
-                "Ask about Frequent Flier Miles offer":{Description:"Ask about Frequent Flier Miles offer"},
+                "Please ask me any question and I will do my best to answer it, type main menu ":{Description:"Please ask me any question and I will do my best to answer it, type main menu "},
                 "Back":{Description:"Back"},
             },
             ar:{
@@ -443,8 +468,8 @@ var program = {
                             Cards : true,
                             Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Card%20Diner.jpg",
                             Title:"Diner’s Club",
-                            Description:"World-class merchandise: Select from hundreds of brand-name merchandise options, from electroni....​​​​",
-                            Pref: "• World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors. • Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments. • Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals. • Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises. • Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more • Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more • Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true"
+                            Description:"If you’re a fancy eater, you’ll love this card. Discounts & reward schemes from shops all around Qatar. \n\n ​​​​",
+                            Pref: " If you’re a fancy eater, you’ll love this card. Discounts & reward schemes from shops all around Qatar. \n\n • World-class merchandise: Select from hundreds of brand-name merchandise options, from electronics and home essentials to sports and outdoors.\n 2. \n \n \n \n \n \n \n \n\n\n\n\n•       Gift Certificates-eGift Certificates: Choose from a selection of retail, dining, hotel, car rental and gas certificates from national establishments.\n\n\n\n\n•       Self-Booking Travel Tool: Use Club Rewards' new Self-Booking Travel tool to search and book your flights or car rentals.\n\n\n\n\n•       Tailored Travel Credit: Fly on virtually any airline, at anytime, with no blackout dates and no restrictions on the number of seats available, or use your points for hotel stays, car rentals and cruises.\n\n\n\n\n•       Frequent Flyer Miles: Redeem Club Rewards points for miles with numerous frequent flyer programs. Airline partners include Air Canada Aeroplan®, Delta SkyMiles®, British Airways Avios Points, Southwest Airlines Rapid Rewards®, and many more\n\n\n\n\n•       Frequent Guest Points: Use your points in participating hotel frequent guest programs. You must be enrolled in the frequent guest program in order to redeem your points. Hotel programs included Marriott Rewards Points, Starwood Preferred Guest® Starpoints®, Hilton HHonorsTM and many more\n\n\n\n\n•       Personalized Rewards: Cardmembers with 50,000+ points can design their own reward. Whatever the wish... whatever the dream... we'll help make it come true."
                         }
                     }   
                 },
@@ -458,21 +483,21 @@ var program = {
                             Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Loan%20Personal.png",
                             Title:"Personal Loan",
                             Description:"No matter what your aspirations and needs, our financing packages and offering...",
-                            Pref: "No matter what your aspirations and needs, our financing packages and offerings will help you and provide you with the necessary support to get there. With our products and offerings package, you are now closer to many things you desired, such as going on your dream vacation, providing the best educational opportunities for your children, celebrating special occasions as planned or receiving the most advanced and up-to-date medical treatment, in addition to pampering yourself with the most plush and prestigious products. Types of Personal Loans: Personal Loan against Salary Personal Loan against Fixed Deposit: You can get the cash you need while maintaining your fixed deposit and accruing profits. With a personal loan against your fixed term deposit, you get cash up to 90% of your fixed deposit value at the lowest interest rates upon application using only your ID. IPO Loans: Whether you are an experienced stock market investor, or just getting started, an IPO finance loan can help you grab the best opportunities."
+                            Pref: "No matter what your aspirations and needs, our financing packages and offerings will help you and provide you with the necessary support to get there. /n/n With our products and offerings package, you are now closer to many things you desired, such as going on your dream vacation, providing the best educational opportunities for your children, celebrating special occasions as planned or receiving the most advanced and up-to-date medical treatment, in addition to pampering yourself with the most plush and prestigious products. /n/n Types of Personal Loans: Personal Loan against Salary Personal Loan against Fixed Deposit: You can get the cash you need while maintaining your fixed deposit and accruing profits. /n/n With a personal loan against your fixed term deposit, you get cash up to 90% of your fixed deposit value at the lowest interest rates upon application using only your ID. /n/n IPO Loans: Whether you are an experienced stock market investor, or just getting started, an IPO finance loan can help you grab the best opportunities. /n/n"
                         },  
                         "Home Loan": {
                             Cards : true,
                             Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Loan%20Home.png",
                             Title:"Home Loan",
                             Description:"We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: • Low interest rates.....",
-                            Pref: "We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: • Low interest rates (1) • No management fees • Flexible monthly repayments • Financing ready properties, under construction and Land (2) • Programs for salaried & self-employed customers • Dedicated mortgage loan center for all mortgage financing services * All loans subject to bank approval. The bank reserves the right to request additional documents and to impose additional conditions in order to complete the approval process."
+                            Pref: "We can help you turn your dreams into action with AdvancaBank Mortgage Loan Features: /n/n •  Low interest rates (1) /n/n •  No management fees /n/n •  Flexible monthly repayments /n/n •  Financing ready properties, under construction and Land (2) /n/n •  Programs for salaried & self-employed customers /n/n •  Dedicated mortgage loan center for all mortgage financing services * All loans subject to bank approval. /n/n The bank reserves the right to request additional documents and to impose additional conditions in order to complete the approval process. /n/n"
                         },  
                         "Car Loan": {
                             Cards : true,
                             Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Loan%20Car.png",
                             Title:"Car Loan",
                             Description:"Drive the car of your dreams today. An AdvancaBank Vehicle Loan is affordable and provides flexible t....​​​​",
-                            Pref: "Drive the car of your dreams today. An AdvancaBank Vehicle Loan is affordable and provides flexible tenure options to meet every need. Features: • Low interest rates • No management fees • Fast approval • Up to 100% financing • Flexible 6 to 72 month repayment options • Financing of new and pre-owned cars • Discounted comprehensive insurance • Down payment assistance Next step • Salary account with the Bank required"
+                            Pref: "Drive the car of your dreams today. An AdvancaBank Vehicle Loan is affordable and provides flexible tenure options to meet every need. Features: /n/n •  Low interest rates /n/n •  No management fees /n/n •  Fast approval /n/n •  Up to 100% financing /n/n •  Flexible 6 to 72 month repayment options /n/n •  Financing of new and pre-owned cars /n/n •  Discounted comprehensive insurance /n/n •  Down payment assistance Next step /n/n •  Salary account with the Bank required"
                         }
                     }   
                 }
@@ -585,6 +610,7 @@ var program = {
         Languages:"العربية|English"
     },
     Init : function(){
+        
         program.RegisterDialogs(bot);
         program.RegisterDialogs(botCreditCard);
         program.RegisterDialogs(botLoan);
@@ -728,9 +754,27 @@ var program = {
             }
         ]);
 
+        varBot.dialog("DontUnderstand",[
+            function(session,results){
+                  var DontUnderstandOptions = program.Helpers.GetOptions(program.Options.DontUnderstand,session.preferredLocale());
+                  builder.Prompts.choice(session, "DontUnderstand", DontUnderstandOptions,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if(results.response.index == 0)
+                    session.send("callus"); 
+                else if(results.response.index == 1)
+                    session.send('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3607.5577835921285!2d51.5055749!3d25.285457299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45dad01d5d434b%3A0x7370ee6db605fda7!2sBarwa+Tower+3%2C+C+Ring+Rd%2C+Doha!5e0!3m2!1sen!2sqa!4v1503151592480" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>').endDialog();
+                else if(results.response.index == 2)
+                    session.replaceDialog("Services");
+            }
+        ]);
+
         varBot.dialog("CommentsandSendEmail",[
             function(session,results){ //get how you heard about us
-                builder.Prompts.text(session, "addComment");
+                 if (results.RequestType != null && results.RequestType == "Inquiry")
+                        builder.Prompts.text(session, "addInquiry");
+                 else
+                        builder.Prompts.text(session, "addComment");
             },
             function(session,results){ // end
                 session.dialogData.comment = results.response;
@@ -772,6 +816,7 @@ var program = {
                 var inputDate= results.response.resolution.start;
                 var  inputDateyyyymm =  dateFormat(inputDate, "isoDateTime").substring(0,10);
                 // session.send("%s", inputDateyyyymm);
+                session.send("Please standby, I will get back to you in a few moments");
                 dynamicsWebApi.retrieveAll("contacts", ["firstname","emailaddress1","mobilephone", "birthdate"], "statecode eq 0").then(function (response) {
                     var records = response.value;
                     // session.send("%s",JSON.stringify(records));
@@ -779,8 +824,8 @@ var program = {
                     {
                         for (var i = 0; i < records.length; i++) {
                             var element = records[i];
-                            
                             if (element.emailaddress1 != null && element.emailaddress1.toLowerCase() == session.dialogData.email.toLowerCase()) {
+                            // session.send("%s", JSON.stringify(element));
                                 if (element.mobilephone != null && element.mobilephone == session.dialogData.mobile ) {
                                     if (inputDateyyyymm == element.birthdate)  { //1989-01-13
                                         session.conversationData.isRegistered = true;
@@ -791,11 +836,19 @@ var program = {
                                         session.replaceDialog("Services");
                                         break;
                                     }
+                                    else
+                                        session.replaceDialog("NotValidUser");
                                 }
+                                else
+                                    session.replaceDialog("NotValidUser");
                             }
+                            else
+                                session.replaceDialog("NotValidUser");
                         }
                         session.replaceDialog("NotValidUser");
                     }
+                    else
+                        session.replaceDialog("NotValidUser");
                 }
                 )
                 .catch(function (error){
@@ -807,16 +860,29 @@ var program = {
         varBot.dialog("CollectInformationCRM",[
             function(session,args){
                 // session.beginDialog("getEmail");
+                if (args.RequestType != null && args.RequestType == "Inquiry")
+                    session.dialogData.RequestType = args.RequestType;
+
                 if(session.conversationData.email == null)
                     session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered });
                 else
-                    session.replaceDialog("CommentsandSendEmail")  
+                {
+                    if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
+                    {
+                        session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})  
+                    }
+                    else
+                        session.replaceDialog("CommentsandSendEmail")  
+                }
             },
             function (session,results) {
                 if(session.CRMResult)
                 {
                     session.send("EmailCRM", session.conversationData.firstName);
-                    session.replaceDialog("CommentsandSendEmail")
+                    if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
+                        session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})  
+                    else
+                        session.replaceDialog("CommentsandSendEmail")  
                 }
                 else
                 {
@@ -830,7 +896,10 @@ var program = {
             },
             function(session,results){ //get how you heard about us
                 session.dialogData.mobile = results.response;
-                builder.Prompts.text(session, "addComment");
+                if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
+                        builder.Prompts.text(session, "addInquiry");  
+                    else
+                        builder.Prompts.text(session, "addComment");  
             },
             function(session,results){ // end
                 session.dialogData.comment = results.response;
@@ -866,7 +935,7 @@ var program = {
 
         varBot.dialog('getDateofBirth', [
             function (session) {
-                builder.Prompts.time(session, 'dateofbirth');
+                builder.Prompts.time(session, 'dateofbirthformat');
             },
             function (session, results) {
                 session.endDialogWithResult(results);
@@ -938,7 +1007,7 @@ var program = {
                 if (args && args.reprompt) {
                     builder.Prompts.text(session, "validEmail");
                 } else {
-                builder.Prompts.text(session, "enterEmail");
+                builder.Prompts.text(session, "enterBankEmail");
                 }
             },
             function(session,results)
@@ -961,7 +1030,7 @@ var program = {
                     else if(!args.isRegistered)
                         builder.Prompts.text(session, "enterEmailNoCRM");
                     else
-                        builder.Prompts.text(session, "enterEmail");
+                        builder.Prompts.text(session, "enterBankEmail");
                 }
             },
             function(session,results)
@@ -969,6 +1038,7 @@ var program = {
                 var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 if(re.test(results.response))
                     {
+                        session.send("Please standby, I will get back to you in a few moments");
                         dynamicsWebApi.retrieveAll("contacts", ["emailaddress1","firstname"], "statecode eq 0").then(function (response) {
                             var records = response.value;
                             // session.send(JSON.stringify(response.value));
@@ -1011,7 +1081,7 @@ var program = {
                     else if(!args.isRegistered)
                         builder.Prompts.text(session, "enterEmailNoCRM");
                     else
-                        builder.Prompts.text(session, "enterEmail");
+                        builder.Prompts.text(session, "enterBankEmail");
                 }
             },
             function(session,results)
@@ -1020,6 +1090,7 @@ var program = {
                 if(re.test(results.response))
                     {
                         session.conversationData.email = results.response;
+                        session.send("Please standby, I will get back to you in a few moments");
                         dynamicsWebApi.retrieveAll("leads", ["emailaddress1","firstname", "mobilephone"], "statecode eq 0").then(function (response) {
                             var records = response.value;
                             if(JSON.stringify(records).toLowerCase().indexOf(results.response.toLowerCase()) > 0 )
@@ -1067,6 +1138,7 @@ var program = {
             },
             function(session,results){ //get how you heard about us
                 session.dialogData.mobile = results.response;
+                session.send("Please standby, I will get back to you in a few moments");
                 dynamicsWebApi.retrieveAll("leads", ["emailaddress1"], "statecode eq 0").then(function (response) {
                     var records = response.value;
                     if(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()) < 0 )
@@ -1150,21 +1222,23 @@ var program = {
                 }
                 else if(results.response.index == 1)
                 {
-                    session.send("This section still under development 1");
+                    session.send("1. Sorry, I’m still “Under Development” and learning about this section");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 2)
                 {
-                    session.send("This section still under development 2");
+                    session.send("1. Sorry, I’m still “Under Development” and learning about this section");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 3)
                 {
-                    session.send("This section still under development 3");
-                    session.replaceDialog("Services");
+                    // session.send("1. Sorry, I’m still “Under Development” and learning about this section");
+                    session.replaceDialog("CollectInformationCRM" , {RequestType : "Inquiry"});
                 }
             }
         ]);
+
+        
 
         varBot.dialog("PersonalBanking",[
             function(session){
@@ -1182,8 +1256,8 @@ var program = {
                 }
                 else if(results.response.index == 2)
                 {
-                    session.send("This section still under development 5");
-                    session.replaceDialog("Services");
+                    session.send("1. Sorry, I’m still “Under Development” and learning about this section");
+                    session.replaceDialog("PersonalBanking");
                 }
                 else if(results.response.index == 3)
                 {
@@ -1251,20 +1325,20 @@ var program = {
                         if(!err){
                             // session.send("%s",session.preferredLocale());
                             var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
-                            builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
+                            builder.Prompts.choice(session, "getLoanServices", LoanServicesList,{listStyle: builder.ListStyle.button});
                         }
                         })
                     }
                     else
                     {
                         var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
-                        builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
+                        builder.Prompts.choice(session, "getLoanServices", LoanServicesList,{listStyle: builder.ListStyle.button});
                     }
                 }
                 else
                     {
                         var LoanServicesList = program.Helpers.GetOptions(program.Options.LoanServicesStart,session.preferredLocale());
-                        builder.Prompts.choice(session, "getServices", LoanServicesList,{listStyle: builder.ListStyle.button});
+                        builder.Prompts.choice(session, "getLoanServices", LoanServicesList,{listStyle: builder.ListStyle.button});
                     }
             },
             function(session,results){
@@ -1282,7 +1356,7 @@ var program = {
         varBot.dialog("LoanOffers",[
             function(session){
                 var LoanOffersServicesList = program.Helpers.GetOptions(program.Options.LoanOffersServices,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", LoanOffersServicesList,{listStyle: builder.ListStyle.button});
+                builder.Prompts.choice(session, "getLoanServices", LoanOffersServicesList,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
                 if (results.response.index == 0) {
@@ -1392,9 +1466,9 @@ var program = {
                 if(results.response.index == 0) 
                     session.replaceDialog(session.dialogData.YesOption);
                 else if(results.response.index == 1)
-                    session.replaceDialog(session.dialogData.NoOption);
-                else if(results.response.index == 2)
                     session.replaceDialog(session.dialogData.ShowAll, { DisplayOptions : session.dialogData.DisplayOptions, ShowAll: session.dialogData.ShowAll , NoOption:session.dialogData.NoOption , YesOption:session.dialogData.YesOption}); 
+                else if(results.response.index == 2)
+                    session.replaceDialog(session.dialogData.NoOption);
              }
         ]);
 
