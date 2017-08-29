@@ -280,11 +280,13 @@ var program = {
                 "Call Us":{Description:"Call Us"},
                 "Visit Us":{Description:"Visit Us"},
                 "Try Again":{Description:"No Thanks"},
+                "Main Menu":{Description:"Main Menu"},
             },
             ar:{
                "أتصل بنا":{Description:"أتصل بنا"},
                "قم بزيارتنا":{Description:"قم بزيارتنا"},
                "محاوله مره أخري":{Description:"محاوله مره أخري"},
+               "القائمه الرئيسيه":{Description:"القائمه الرئيسيه"},
             }
         },
         DontUnderstand:{
@@ -751,6 +753,8 @@ var program = {
                     session.send('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3607.5577835921285!2d51.5055749!3d25.285457299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45dad01d5d434b%3A0x7370ee6db605fda7!2sBarwa+Tower+3%2C+C+Ring+Rd%2C+Doha!5e0!3m2!1sen!2sqa!4v1503151592480" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>').endDialog();
                 else if(results.response.index == 2)
                     session.replaceDialog("ValidateUser");
+                else if(results.response.index == 3)
+                    session.replaceDialog("Services");
             }
         ]);
 
