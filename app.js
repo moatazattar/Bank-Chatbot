@@ -1368,7 +1368,7 @@ var program = {
             function(session){
                 var msg = new builder.Message(session);
                 msg.attachmentLayout(builder.AttachmentLayout.carousel);
-                var txt = session.localizer.gettext("en","selectYourLanguage");
+                var txt = session.localizer.gettext("en","manualHelpText");
                 msg.attachments([
                 new builder.HeroCard(session)
                     .title("AdvancaBank")
