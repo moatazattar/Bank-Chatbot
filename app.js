@@ -200,7 +200,7 @@ var intents = new builder.IntentDialog({ recognizers: [
     session.preferredLocale(locale,function(err){
         if(!err){
             // session.send("welcomeText");
-            session.replaceDialog("ExistingUser");
+            session.replaceDialog("arabicNotYet");
         };
     })
 })
