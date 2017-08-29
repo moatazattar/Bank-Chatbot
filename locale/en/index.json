@@ -18,7 +18,7 @@
     "askForEmail" : "Hi, please let me know whats is your name",
     "greetingAgain" : "Hi again %s, how may i help you?",
     "greetingAsk" : "Hi %s, how may I help you today?",
-    "selectYourLanguage" : "Hi, I’m your personal assistant to answer your questions about our Banking Services. You can ask me simple questions like “How can I apply for a Credit Card?”, or “What are current offers”, or similar questions. At any time, you can ask to see the Main Menu by simply typing 'Main Menu' - السلام عليكم، انا مساعدك الشخصي الآلي ويمكنك ان تسألني عن خدماتنا المصرفية. يمكنك طرح أسئلة بسيطة مثل ‘كيف يمكنني الحصول على بطاقة اعتماد’ أو ‘هل تقدمون أي عروض’ أو ما شابه. بإمكانك الرجوع إلى قائمة عرض رئيسية عبر كتابة عبارة ‘اللائحة الرئيسية’.",
+    "selectYourLanguage" : "Hi, I’m your personal assistant to answer your questions about our Banking Services. You can ask me simple questions like “How can I apply for a Credit Card?”, or “What are current offers”, or similar questions. At any time, you can ask to see the Main Menu by simply typing 'Main Menu' </br>  ‘السلام عليكم، انا مساعدك الشخصي الآلي ويمكنك ان تسألني عن خدماتنا المصرفية. يمكنك طرح أسئلة بسيطة مثل ‘كيف يمكنني الحصول على بطاقة اعتماد’ أو ‘هل تقدمون أي عروض’ أو ما شابه. بإمكانك الرجوع إلى قائمة عرض رئيسية عبر كتابة عبارة ‘اللائحة الرئيسية’.",
     "selectYourLanguageStart" : "Please select your language | برجاء أختيار لغتك المفضله",
     "getMobileNumber":"Please give me your mobile number",
     "getZones" :"Which zone are you more interested in?",

@@ -1371,7 +1371,7 @@ var program = {
                 var txt = session.localizer.gettext("en","selectYourLanguage");
                 msg.attachments([
                 new builder.HeroCard(session)
-                    .title("Advance Bank")
+                    .title("AdvancaBank")
                     .text(txt)
                     .images([builder.CardImage.create(session, "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/AdvancyaBankLogo.png")])
                     .buttons([
