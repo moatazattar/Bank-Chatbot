@@ -211,7 +211,7 @@ var intents = new builder.IntentDialog({ recognizers: [
         session.conversationData.dontUnderstandCount = 1;
     }
 
-    if (session.conversationData.dontUnderstandCount == 4)
+    if (session.conversationData.dontUnderstandCount == 3)
         session.replaceDialog("DontUnderstand");
     else
     {
