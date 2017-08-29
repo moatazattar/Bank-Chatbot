@@ -352,7 +352,7 @@ var program = {
         CreditCardServices:{
             en:{
                 "View all available Credit Card Offers":{Description:"View all available Credit Card Offers"},
-                "Please ask me any question and I will do my best to answer it, type main menu ":{Description:"Please ask me any question and I will do my best to answer it, type main menu "},
+                "Ask about Frequent Flier Miles offer":{Description:"Ask about Frequent Flier Miles offer"},
                 "Back":{Description:"Back"},
             },
             ar:{
