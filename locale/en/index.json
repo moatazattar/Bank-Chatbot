@@ -32,11 +32,11 @@
     "thanksInquiry":"Thanks, we have recorded your Enquiry and one of our consultants will be in touch with you very soon.\n\nA copy of your enquiry has been forwarded to %s.", 
     "maybeinInvestor":"I see you are interested in knowing more about the exciting investment opportunities with Advance Bank. \n\n Would you like to give us some quick details, and we will have one of our investment consultants reach you for a full presentation?",
     "whichService" : "Please ask me any question and I will do my best to answer it, type main menu at anytime to start over",
-    "getServices" : "Which service can i help you with:",
-    "getServicesDynamic" : "Which service can i help you with:",
+    "getServices" : "Please select any of the below services to better serve you.",
+    "getServicesDynamic" : "Please select any of the below services to better serve you.",
     "getUserType": "Please select an option:",
     "areYouInterestedinProperty":"Are you interested in this property",
-    "areYouMemeber" : "Are you an existing customer with us?",
+    "areYouMemeber" : "Thank you, I’ll be happy to help you today. Please let me know if you’re an existing customer",
     "defaultIntent": "Sorry I couldn’t understand what you are saying, please rephrase your question and try using direct short questions",
     "endofservice" : "Thank you for banking with AdvancaBank, we look forward to serving you!",
     "nationalityPlease": "please can I know your nationality",
@@ -45,5 +45,7 @@
     "visitus":"",
     "NotValidUser" : "I’m sorry but I don’t recognize your information. Please call our support Hotline or visit your nearest branch, or try again.",
     "CreditCardStarttext" : "Hi, can I help you find the right card for you? Please select View all Credit Card option below",
-    "LoanStarttext" : "Hi, can I help you find the right loan for you? Please select View all Loan option below"
+    "LoanStarttext" : "Hi, can I help you find the right loan for you? Please select View all Loan option below",
+    "ArabicNotYet": "Arabic is not ready",
+    "getCreditCardServices": "1. If you’re looking to find the right Credit Card for you, you’ve reached the right place, Please select one of the options below so I can help you find the perfect choice."
 }

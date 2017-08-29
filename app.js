@@ -429,15 +429,15 @@ var program = {
                             Cards : true,
                             Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Card%20Platinum.jpg",
                             Title:"Platinum Card",
-                            Description:"UBER RIDES WITH PLATINUM THE GLOBAL LOUNGE COLLECTION...",
-                            Pref: "UBER RIDES WITH PLATINUM THE GLOBAL LOUNGE COLLECTION $200 AIRLINE FEE CREDIT FEE CREDIT FOR GLOBAL ENTRY OR TSA PRE FINE HOTELS & RESORTS THE HOTEL COLLECTION PLATINUM TRAVEL SERVICE STARWOOD PREFERRED GUEST® GOLD HILTON HONORS™ GOLD STATUS NO FOREIGN TRANSACTION FEES CAR RENTAL PRIVILEGES"
+                            Description:"This is our best offer card and provides ultimate value for your money. From offerings to savings to cashback, it has it all.",
+                            Pref: "This is our best offer card and provides ultimate value for your money. From offerings to savings to cashback, it has it all. \n\n 1-UBER RIDES WITH PLATINUM\n 2. \n \n \n \n \n \n \n \n\n\n\n\n2-THE GLOBAL LOUNGE COLLECTION\n\n\n\n\n3-$200 AIRLINE FEE CREDIT\n\n\n\n\n4-FEE CREDIT FOR GLOBAL ENTRY OR TSA PRE\n\n\n\n\n5-FINE HOTELS & RESORTS\n\n\n\n\n6-THE HOTEL COLLECTION\n\n\n\n\n7-PLATINUM TRAVEL SERVICE\n\n\n\n\n8-STARWOOD PREFERRED GUEST® GOLD\n\n\n\n\n9-HILTON HONORS™ GOLD STATUS\n\n\n\n\n10-NO FOREIGN TRANSACTION FEES\n\n\n11-CAR RENTAL PRIVILEGES"
                         },  
                         "Gold Card": {
                             Cards : true,
                             Image: "https://raw.githubusercontent.com/moatazattar/Bank-Chatbot/master/images/Card%20Gold.jpg",
                             Title:"Gold Card",
-                            Description:"Premier Rewards Gold Card from American Express Reward yourself for the things you already do.....",
-                            Pref: "Premier Rewards Gold Card from American Express Reward yourself for the things you already do. Special Offer For You: Earn 50,000 Points after you spend $2,000 on purchases on your new Card in your first 3 months. This offer is available to you by clicking through this web page. If you leave or close this web page and return later, this offer may no longer be available. ANNUAL FEE $0 intro annual fee for the first year, then $195†¤ NO INTEREST CHARGES No interest charges because you pay your balance in full each month"
+                            Description:"One of our most popular cards with all types of clients, benefit from\n Reward Points and much more.",
+                            Pref: "One of our most popular cards with all types of clients, benefit from\n Reward Points and much more. \n\n Premier Rewards Gold Card from American Express: Reward yourself\n for the things you already do. \n\n Special Offer For You: \n\n Earn 50,000 Points after you spend $2,000 on purchases on your new\n Card in your first 3 months. \n\n This offer is available to you by clicking through this web page.\n If you leave or close this web page and return later, this offer\n may no longer be available. \n\n ANNUAL FEE \n\n $0 intro annual fee for the first year, then $195 \n\n NO INTEREST CHARGES \n\n No interest charges because you pay your balance in full each month\n \n \n \n \n \n \n \n \n"
                         },  
                         "Diner’s Club": {
                             Cards : true,
@@ -615,7 +615,7 @@ var program = {
         varBot.dialog("CreditCard",[
             function(session, args){
                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServices,session.preferredLocale());
-                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+                builder.Prompts.choice(session, "getCreditCardServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
                 if (results.response.index == 0) {
@@ -652,6 +652,11 @@ var program = {
                         session.replaceDialog("StartCreditCard");
                     if(session.dialogData.startOption == "loan")
                         session.beginDialog("LoanStart");
+                    if(session.dialogData.startOption == null)
+                        if (results.response.index == 1) 
+                            session.beginDialog("ExistingUser");
+                        else
+                            session.beginDialog("arabicNotYet");
                 }       
             });
         }
@@ -1204,20 +1209,20 @@ var program = {
                             if(!err){
                                 // session.send("%s",session.conversationData.lang);
                                 var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
-                                builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+                                builder.Prompts.choice(session, "getCreditCardServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                             };
                         })
                     }
                     else
                     {
                         var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
-                        builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+                        builder.Prompts.choice(session, "getCreditCardServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                     }
                 }
                 else
                 {
                     var CreditCardServicesList = program.Helpers.GetOptions(program.Options.CreditCardServicesStart,session.preferredLocale());
-                    builder.Prompts.choice(session, "getServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
+                    builder.Prompts.choice(session, "getCreditCardServices", CreditCardServicesList,{listStyle: builder.ListStyle.button});
                 }
             },
             function(session,results){
@@ -1302,11 +1307,17 @@ var program = {
             },
             function(session,results){
                 if(results.response.index == 0)
+                 {   
                     session.send("callus"); 
+                    session.replaceDialog("setLanguage", {startOption : null});
+                 }
                 else if(results.response.index == 1)
+                {  
                     session.send('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3607.5577835921285!2d51.5055749!3d25.285457299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45dad01d5d434b%3A0x7370ee6db605fda7!2sBarwa+Tower+3%2C+C+Ring+Rd%2C+Doha!5e0!3m2!1sen!2sqa!4v1503151592480" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>').endDialog();
+                    session.replaceDialog("setLanguage", {startOption : null});
+                 }
                 else if(results.response.index == 2)
-                    session.replaceDialog("LanguageListStart");
+                    session.replaceDialog("setLanguage", {startOption : null});
             }
         ]);
          
@@ -1411,11 +1422,12 @@ var program = {
             ,
             function(session,results){
                var locale = program.Helpers.GetLocal(results.response.index);
+            //    session.send("%s", results.response.index)
                session.conversationData.lang = locale;
                session.preferredLocale(locale,function(err){
                    if(!err){
                         // session.send("welcomeText");
-                        if (results.response.index == 1) {
+                        if (results.response.index == 0) {
                             session.replaceDialog("arabicNotYet");
                         }
                         else
