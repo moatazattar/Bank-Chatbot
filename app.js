@@ -859,6 +859,7 @@ var program = {
         varBot.dialog("CollectInformationCRM",[
             function(session,args){
                 // session.beginDialog("getEmail");
+                
                 if (args.RequestType != null && args.RequestType == "Inquiry")
                     session.dialogData.RequestType = args.RequestType;
 
@@ -871,7 +872,7 @@ var program = {
                         session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})  
                     }
                     else
-                        session.replaceDialog("CommentsandSendEmail")  
+                        session.replaceDialog("CommentsandSendEmail",{RequestType : ""})  
                 }
             },
             function (session,results) {
@@ -881,7 +882,7 @@ var program = {
                     if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
                         session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})  
                     else
-                        session.replaceDialog("CommentsandSendEmail")  
+                        session.replaceDialog("CommentsandSendEmail",{RequestType : ""})  
                 }
                 else
                 {
@@ -1463,7 +1464,7 @@ var program = {
             },
              function(session,results){
                 if(results.response.index == 0) 
-                    session.replaceDialog(session.dialogData.YesOption);
+                    session.replaceDialog(session.dialogData.YesOption, {RequestType : ""});
                 else if(results.response.index == 1)
                     session.replaceDialog(session.dialogData.ShowAll, { DisplayOptions : session.dialogData.DisplayOptions, ShowAll: session.dialogData.ShowAll , NoOption:session.dialogData.NoOption , YesOption:session.dialogData.YesOption}); 
                 else if(results.response.index == 2)
