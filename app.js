@@ -274,6 +274,18 @@ var program = {
                "محاوله مره أخري":{Description:"محاوله مره أخري"},
             }
         },
+        ArabicNotYet:{
+            en:{
+                "Call Us":{Description:"Call Us"},
+                "Visit Us":{Description:"Visit Us"},
+                "Back to English":{Description:"Back to English"},
+            },
+            ar:{
+               "أتصل بنا":{Description:"أتصل بنا"},
+               "قم بزيارتنا":{Description:"قم بزيارتنا"},
+               "رجوع للقائمه الرئيسيه":{Description:"رجوع للقائمه الرئيسيه"},
+            }
+        },
         AlreadyUser:{
             en:{
                "Yes":{Description:"Yes"},
@@ -1283,6 +1295,21 @@ var program = {
                 }
             }
         ]);
+        varBot.dialog("arabicNotYet",[
+            function(session,results){
+                  var ArabicNotYetOptions = program.Helpers.GetOptions(program.Options.ArabicNotYet,session.preferredLocale());
+                  builder.Prompts.choice(session, "ArabicNotYet", ArabicNotYetOptions,{listStyle: builder.ListStyle.button});
+            },
+            function(session,results){
+                if(results.response.index == 0)
+                    session.send("callus"); 
+                else if(results.response.index == 1)
+                    session.send('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3607.5577835921285!2d51.5055749!3d25.285457299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45dad01d5d434b%3A0x7370ee6db605fda7!2sBarwa+Tower+3%2C+C+Ring+Rd%2C+Doha!5e0!3m2!1sen!2sqa!4v1503151592480" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>').endDialog();
+                else if(results.response.index == 2)
+                    session.replaceDialog("LanguageListStart");
+            }
+        ]);
+         
 
         //////////////////////////
             varBot.dialog("HeroCardsDialog",[
@@ -1388,7 +1415,11 @@ var program = {
                session.preferredLocale(locale,function(err){
                    if(!err){
                         // session.send("welcomeText");
-                        session.replaceDialog("ExistingUser");
+                        if (results.response.index == 1) {
+                            session.replaceDialog("arabicNotYet");
+                        }
+                        else
+                            session.replaceDialog("ExistingUser");
                    }
                }
             );  
