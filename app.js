@@ -819,7 +819,7 @@ var program = {
                 session.send("Please standby, I will get back to you in a few moments");
                 dynamicsWebApi.retrieveAll("contacts", ["firstname","emailaddress1","mobilephone", "birthdate"], "statecode eq 0").then(function (response) {
                     var records = response.value;
-                    // session.send("%s",JSON.stringify(records));
+                    session.send("%s",JSON.stringify(records));
                     if(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()) > 0 )
                     {
                         for (var i = 0; i < records.length; i++) {
