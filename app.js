@@ -819,14 +819,15 @@ var program = {
                 session.send("Please standby, I will get back to you in a few moments");
                 dynamicsWebApi.retrieveAll("contacts", ["firstname","emailaddress1","mobilephone", "birthdate"], "statecode eq 0").then(function (response) {
                     var records = response.value;
-                    session.send("%s",JSON.stringify(records));
-                    session.send("%s",session.dialogData.email);
+                    // session.send("%s",JSON.stringify(records));
+                    // session.send("%s",session.dialogData.email);
                     if(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()) > 0 )
                     {
+                        // session.send("In");
                         for (var i = 0; i < records.length; i++) {
                             var element = records[i];
+                            // session.send("In 2");
                             if (element.emailaddress1 != null && element.emailaddress1.toLowerCase() == session.dialogData.email.toLowerCase()) {
-                            session.send("%s", JSON.stringify(element));
                                 if (element.mobilephone != null && element.mobilephone == session.dialogData.mobile ) {
                                     if (inputDateyyyymm == element.birthdate)  { //1989-01-13
                                         session.conversationData.isRegistered = true;
@@ -837,19 +838,12 @@ var program = {
                                         session.replaceDialog("Services");
                                         break;
                                     }
-                                    else
-                                        session.replaceDialog("NotValidUser");
                                 }
-                                else
-                                    session.replaceDialog("NotValidUser");
                             }
-                            else
-                                session.replaceDialog("NotValidUser");
                         }
-                        session.replaceDialog("NotValidUser");
                     }
-                    else
-                        session.replaceDialog("NotValidUser");
+
+                    session.replaceDialog("NotValidUser");
                 }
                 )
                 .catch(function (error){
