@@ -1221,12 +1221,12 @@ var program = {
                 }
                 else if(results.response.index == 1)
                 {
-                    session.send("1. Sorry, I’m still “Under Development” and learning about this section");
+                    session.send("Sorry, I’m still “Under Development” and learning about this section");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 2)
                 {
-                    session.send("1. Sorry, I’m still “Under Development” and learning about this section");
+                    session.send("Sorry, I’m still “Under Development” and learning about this section");
                     session.replaceDialog("Services");
                 }
                 else if(results.response.index == 3)
@@ -1381,7 +1381,7 @@ var program = {
             function(session,results){
                 if(results.response.index == 0)
                  {   
-                    session.send("callus"); 
+                    session.send("contactus"); 
                     session.replaceDialog("setLanguage", {startOption : null});
                  }
                 else if(results.response.index == 1)

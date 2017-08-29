@@ -49,8 +49,9 @@
     "CreditCardStarttext" : "Hi, can I help you find the right card for you? Please select View all Credit Card option below",
     "LoanStarttext" : "Hi, can I help you find the right loan for you? Please select View all Loan option below",
     "ArabicNotYet": "Arabic is not ready",
-    "getCreditCardServices": "If you’re looking to find the right Credit Card for you, you’ve reached the right place. /n/n Please select one of the options below so I can help you find the perfect choice.",
-    "getLoanServices":"Welcome to our Loans section, where we will help you find the perfect loan for your needs. /n/n Please select one of the options below so I can help you find the perfect choice.",
+    "getCreditCardServices": "If you’re looking to find the right Credit Card for you, you’ve reached the right place. \n\n Please select one of the options below so I can help you find the perfect choice.",
+    "getLoanServices":"Welcome to our Loans section, where we will help you find the perfect loan for your needs. \n\n Please select one of the options below so I can help you find the perfect choice.",
     "addInquiry" : "Please type your inquiry and our Service Agents will reply to your by email or phone within 3 business days",
-    "DontUnderstand" : "Sorry I couldn’t understand what you are saying"
+    "DontUnderstand" : "Sorry I couldn’t understand what you are saying",
+    "contactus" : "+97444954974"
 }
