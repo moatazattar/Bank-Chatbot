@@ -825,7 +825,7 @@ var program = {
                         for (var i = 0; i < records.length; i++) {
                             var element = records[i];
                             if (element.emailaddress1 != null && element.emailaddress1.toLowerCase() == session.dialogData.email.toLowerCase()) {
-                            // session.send("%s", JSON.stringify(element));
+                            session.send("%s", JSON.stringify(element));
                                 if (element.mobilephone != null && element.mobilephone == session.dialogData.mobile ) {
                                     if (inputDateyyyymm == element.birthdate)  { //1989-01-13
                                         session.conversationData.isRegistered = true;
