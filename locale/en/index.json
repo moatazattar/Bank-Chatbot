@@ -52,5 +52,5 @@
     "getCreditCardServices": "If you’re looking to find the right Credit Card for you, you’ve reached the right place. /n/n Please select one of the options below so I can help you find the perfect choice.",
     "getLoanServices":"Welcome to our Loans section, where we will help you find the perfect loan for your needs. /n/n Please select one of the options below so I can help you find the perfect choice.",
     "addInquiry" : "Please type your inquiry and our Service Agents will reply to your by email or phone within 3 business days",
-    "DontUnderstand" : ""
+    "DontUnderstand" : "Sorry I couldn’t understand what you are saying"
 }
