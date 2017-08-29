@@ -820,6 +820,7 @@ var program = {
                 dynamicsWebApi.retrieveAll("contacts", ["firstname","emailaddress1","mobilephone", "birthdate"], "statecode eq 0").then(function (response) {
                     var records = response.value;
                     session.send("%s",JSON.stringify(records));
+                    session.send("%s",session.dialogData.email);
                     if(JSON.stringify(records).toLowerCase().indexOf(session.dialogData.email.toLowerCase()) > 0 )
                     {
                         for (var i = 0; i < records.length; i++) {
