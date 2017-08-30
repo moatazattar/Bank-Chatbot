@@ -212,7 +212,10 @@ var intents = new builder.IntentDialog({ recognizers: [
     }
 
     if (session.conversationData.dontUnderstandCount == 3)
+    {
+        session.conversationData.dontUnderstandCount = 1;
         session.replaceDialog("DontUnderstand");
+    }
     else
     {
         session.conversationData.dontUnderstandCount++;
@@ -227,7 +230,7 @@ var program = {
         questionBeforeGenericHelp : 3,
         EmailTemplate : {
             Content:{
-                en:"Dear {{user}} <br/> i. Thanks alot for your interest in AdvancaBank, our team will study your inquiry and will get back to you as soon as possible <br/><table border=1><tr><td>Mobile</td><td>{{mobile}}</td></tr><tr><td>property</td><td>{{property}}</td></tr><tr><td>Comment</td><td>{{comment}}</td></tr></table><br/>Regards,<br/>AdvancaBank Team",
+                en:"Dear {{user}} <br/> i. Thanks alot for your interest in AdvancaBank, our team will study your inquiry and will get back to you as soon as possible <br/><table border=1><tr><td>Mobile</td><td>{{mobile}}</td></tr><tr><td>Type</td><td>{{property}}</td></tr><tr><td>Comment</td><td>{{comment}}</td></tr></table><br/>Regards,<br/>AdvancaBank Team",
                 ar:"<div style='direction:rtl'> عزيزي {{user}} <br/> شكراً على اهتمامك بعقارات الشركه المتحده، سوف نقوم بدراسة طلبك والرد عليك بأقرب فرصة ممكنة <br/><br/><table border=1><tr><td>رقم جوالك</td><td>{{mobile}}</td></tr><tr><td>اهتماماتك</td><td>{{property}}</td></tr><tr><td>الاستعلام عنه</td><td>{{comment}}</td></tr></table><br/> مع تحيات فريق عمل الشركه المتحده</div>"
             },
             Subject:{
@@ -731,13 +734,13 @@ var program = {
         varBot.dialog("EndofService",[
             function(session,results){
                   var EndofServiceOptions = program.Helpers.GetOptions(program.Options.EndofService,session.preferredLocale());
-                  builder.Prompts.choice(session, "areYouMemeber", EndofServiceOptions,{listStyle: builder.ListStyle.button});
+                  builder.Prompts.choice(session, "endofservice", EndofServiceOptions,{listStyle: builder.ListStyle.button});
             },
             function(session,results){
                 if(results.response.index == 0)
                     session.replaceDialog("Services"); 
                 else
-                    session.send("endofservice")
+                    session.send("nothanks");
             }
         ]);
 
@@ -765,25 +768,31 @@ var program = {
             },
             function(session,results){
                 if(results.response.index == 0)
-                    session.send("callus"); 
+                    session.send("callusdontunderstand"); 
                 else if(results.response.index == 1)
                     session.send('<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3607.5577835921285!2d51.5055749!3d25.285457299999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e45dad01d5d434b%3A0x7370ee6db605fda7!2sBarwa+Tower+3%2C+C+Ring+Rd%2C+Doha!5e0!3m2!1sen!2sqa!4v1503151592480" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>').endDialog();
-                else if(results.response.index == 2)
-                    session.replaceDialog("Services");
+                // else if(results.response.index == 2)
+                //     session.replaceDialog("Services");
+
+                session.replaceDialog("Services");
             }
         ]);
 
         varBot.dialog("CommentsandSendEmail",[
             function(session,results){ //get how you heard about us
                  if (results.RequestType != null && results.RequestType == "Inquiry")
-                        builder.Prompts.text(session, "addInquiry");
+                {
+                    session.conversationData.InternetedProduct = "General Inquiry";
+                    builder.Prompts.text(session, "addInquiry");
+                }
                  else
-                        builder.Prompts.text(session, "addComment");
+                    builder.Prompts.text(session, "addComment");
             },
             function(session,results){ // end
                 session.dialogData.comment = results.response;
                 session.send(session.dialogData.name);
                 //Send Email
+
                 program.Helpers.SendEmail({
                     email:session.conversationData.email,
                     user:session.conversationData.firstName,
@@ -863,26 +872,31 @@ var program = {
                 if (args.RequestType != null && args.RequestType == "Inquiry")
                     session.dialogData.RequestType = args.RequestType;
 
-                if(session.conversationData.email == null)
-                    session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered });
+                if(session.conversationData.email == null )
+                    session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered,RequestType : args.RequestType});
                 else
                 {
-                    if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
-                    {
-                        session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})  
-                    }
-                    else
-                        session.replaceDialog("CommentsandSendEmail",{RequestType : ""})  
+                    // if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
+                    // {
+                        session.replaceDialog("CommentsandSendEmail", {RequestType : args.RequestType})  
+                    // }
+                    // else
+                        // session.replaceDialog("CommentsandSendEmail",{RequestType : ""})  
                 }
             },
             function (session,results) {
                 if(session.CRMResult)
                 {
-                    session.send("EmailCRM", session.conversationData.firstName);
                     if (session.dialogData.RequestType != null && session.dialogData.RequestType == "Inquiry")
-                        session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})  
+                    {
+                        session.send("EmailCRMInquiry", session.conversationData.firstName);
+                        session.replaceDialog("CommentsandSendEmail", {RequestType : "Inquiry"})     
+                    }
                     else
+                    {
+                        session.send("EmailCRM", session.conversationData.firstName);
                         session.replaceDialog("CommentsandSendEmail",{RequestType : ""})  
+                    }
                 }
                 else
                 {
@@ -1080,6 +1094,8 @@ var program = {
                         builder.Prompts.text(session, "enterEmailCRM");
                     else if(!args.isRegistered)
                         builder.Prompts.text(session, "enterEmailNoCRM");
+                    else if (args.RequestType == "Inquiry") 
+                        builder.Prompts.text(session, "enterEmailInquiry");
                     else
                         builder.Prompts.text(session, "enterBankEmail");
                 }
