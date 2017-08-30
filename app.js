@@ -803,6 +803,21 @@ var program = {
                 session.send("thanksInquiry",session.conversationData.email);
                 session.conversationData.applicationSubmitted = true;
                 
+
+                var lead = {
+                    subject: "Intersted in "+ session.conversationData.InternetedProduct,
+                    firstname: session.conversationData.firstName,
+                    description: session.dialogData.comment,
+                    mobilephone: session.conversationData.mobile,
+                    emailaddress1: session.conversationData.email
+                };
+                //call dynamicsWebApi.create function 
+                dynamicsWebApi.create(lead, "leads").then(function (id) {
+                    // session.send("Your data had been saved");
+                }).catch(function (error) {
+                    session.send("Item Not Added");
+                })
+
                 session.replaceDialog("EndofService");
 
             }
@@ -870,7 +885,10 @@ var program = {
                 // session.beginDialog("getEmail");
                 
                 if (args.RequestType != null && args.RequestType == "Inquiry")
+                {
                     session.dialogData.RequestType = args.RequestType;
+                    session.conversationData.InternetedProduct = "General Inquery"   
+                }
 
                 if(session.conversationData.email == null )
                     session.beginDialog("getEmailCRMLead",{ reprompt: false, isRegistered : session.conversationData.isRegistered,RequestType : args.RequestType});
@@ -933,7 +951,7 @@ var program = {
                 var lead = {
                     subject: "Intersted in "+ session.conversationData.InternetedProduct,
                     firstname: session.dialogData.name,
-                    // lastname: session.conversationData.lastName,
+                    description: session.dialogData.comment,
                     mobilephone: session.dialogData.mobile,
                     emailaddress1: session.dialogData.email
                 };
