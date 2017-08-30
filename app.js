@@ -1090,9 +1090,9 @@ var program = {
                 if (args && args.reprompt) {
                         builder.Prompts.text(session, "validEmail");
                 } else {
-                    if (args.isRegistered)
+                    if (args.isRegistered && args.RequestType == "")
                         builder.Prompts.text(session, "enterEmailCRM");
-                    else if(!args.isRegistered)
+                    else if(!args.isRegistered && args.RequestType == "")
                         builder.Prompts.text(session, "enterEmailNoCRM");
                     else if (args.RequestType == "Inquiry") 
                         builder.Prompts.text(session, "enterEmailInquiry");
