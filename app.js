@@ -6,16 +6,22 @@ var nodemailer = require('nodemailer');
 var DynamicsWebApi = require('dynamics-web-api');
 var AuthenticationContext = require('adal-node').AuthenticationContext;
 var dynamicsWebApi = new DynamicsWebApi({ 
-    webApiUrl: 'https://advancyaqatar0.crm4.dynamics.com/api/data/v8.2/',
+    // webApiUrl: 'https://advancyaqatar0.crm4.dynamics.com/api/data/v8.2/',
+    webApiUrl: 'https://advancyaaqatar.crm.dynamics.com/api/data/v8.2/',
     onTokenRefresh: acquireToken
 });
 Q = require('q');
 var app = require('express')();
 
-var authorityUrl = 'https://login.microsoftonline.com/d022f938-d149-41eb-89fc-2792c9c82ee2/oauth2/token';
-var resource = 'https://advancyaqatar0.crm4.dynamics.com';
-var clientId = 'a5fca245-2eb5-469b-9a36-445203c29a9b';
-var username = 'moatazattar@advancyaQatar.onmicrosoft.com';
+// var authorityUrl = 'https://login.microsoftonline.com/d022f938-d149-41eb-89fc-2792c9c82ee2/oauth2/token';
+// var resource = 'https://advancyaqatar0.crm4.dynamics.com';
+// var clientId = 'a5fca245-2eb5-469b-9a36-445203c29a9b';
+// var username = 'moatazattar@advancyaQatar.onmicrosoft.com';
+
+var authorityUrl = 'https://login.microsoftonline.com/28e841b2-0c6d-4ec8-b792-66d36aaaa093/oauth2/token';
+var resource = 'https://advancyaaqatar.crm.dynamics.com';
+var clientId = '7867c3c0-da4a-4658-91dc-24c7373a46b3';
+var username = 'amokdad@advancyaaQatar.onmicrosoft.com';
 var password = '1!!xuloloL';
 var adalContext = new AuthenticationContext(authorityUrl);
 function acquireToken(dynamicsWebApiCallback){
@@ -874,7 +880,7 @@ var program = {
                     session.replaceDialog("NotValidUser");
                 }
                 )
-                .catch(function (error){
+                .catch(function (session, error){
                     session.replaceDialog("NotValidUser");
                 });
             }
