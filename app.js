@@ -876,7 +876,6 @@ var program = {
                             }
                         }
                     }
-
                     session.replaceDialog("NotValidUser");
                 }
                 )
